@@ -1,0 +1,2521 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verkaufsskript - Zinsboutique</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #f8f9fa;
+            color: #1a1a2e;
+            min-height: 100vh;
+            font-size: 17px;
+            line-height: 1.6;
+        }
+
+        /* HEADER */
+        .app-header {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border-bottom: 3px solid #d4af37;
+            padding: 14px 24px;
+            display: flex; align-items: center; justify-content: space-between;
+            position: sticky; top: 0; z-index: 100;
+        }
+        .app-header h1 { color: #d4af37; font-size: 20px; font-weight: 700; letter-spacing: 1.5px; }
+        .app-header .subtitle { color: #aaa; font-size: 12px; margin-top: 2px; }
+        .btn-reset {
+            background: none; border: 1px solid #666; color: #aaa; padding: 8px 16px;
+            border-radius: 6px; font-size: 13px; cursor: pointer; transition: all 0.2s;
+        }
+        .btn-reset:hover { border-color: #e74c3c; color: #e74c3c; }
+
+        /* PROGRESS */
+        .progress-container {
+            background: #fff; padding: 10px 24px; border-bottom: 1px solid #ddd;
+            position: sticky; top: 58px; z-index: 99; box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .progress-bar-bg { background: #e0e0e0; border-radius: 10px; height: 8px; overflow: hidden; }
+        .progress-bar-fill { background: linear-gradient(90deg, #d4af37, #f0d060); height: 100%; border-radius: 10px; transition: width 0.5s ease; width: 0%; }
+        .progress-info { display: flex; justify-content: space-between; align-items: center; margin-top: 6px; font-size: 13px; color: #666; }
+        .progress-info .current-phase { color: #1a1a2e; font-weight: 600; }
+
+        /* MAIN */
+        .main-content { max-width: 860px; margin: 0 auto; padding: 24px 16px 120px; }
+
+        /* START SCREEN */
+        .start-screen { animation: fadeIn 0.4s ease; }
+        .start-title {
+            text-align: center; font-size: 32px; font-weight: 800; color: #1a1a2e;
+            margin-bottom: 8px;
+        }
+        .start-subtitle { text-align: center; color: #666; font-size: 16px; margin-bottom: 32px; }
+        .script-cards { display: grid; gap: 16px; }
+        .script-card {
+            background: #fff; border: 2px solid #e0e0e0; border-radius: 16px;
+            padding: 28px 24px; cursor: pointer; transition: all 0.25s;
+            display: flex; align-items: center; gap: 20px;
+        }
+        .script-card:hover { border-color: #d4af37; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+        .script-card .card-icon {
+            width: 60px; height: 60px; border-radius: 14px; display: flex; align-items: center;
+            justify-content: center; font-size: 28px; flex-shrink: 0;
+            background: linear-gradient(135deg, #1a1a2e, #16213e); color: #d4af37;
+        }
+        .script-card .card-body h3 { font-size: 20px; font-weight: 700; color: #1a1a2e; margin-bottom: 4px; }
+        .script-card .card-body p { font-size: 14px; color: #777; line-height: 1.4; }
+        .script-card .card-badge {
+            margin-left: auto; background: #f0e6c8; color: #8a6d1b; font-size: 12px;
+            font-weight: 700; padding: 4px 12px; border-radius: 20px; white-space: nowrap; flex-shrink: 0;
+        }
+
+        /* STEP CARD */
+        .step-card { animation: fadeIn 0.35s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+        .step-phase {
+            display: inline-block; background: #1a1a2e; color: #d4af37;
+            font-size: 12px; font-weight: 700; padding: 4px 14px; border-radius: 20px;
+            letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px;
+        }
+        .step-title { font-size: 30px; font-weight: 800; color: #1a1a2e; margin-bottom: 20px; line-height: 1.2; }
+
+        /* SPEECH BOX */
+        .speech-box {
+            background: #fffbf0; border-left: 5px solid #d4af37; border-radius: 0 12px 12px 0;
+            padding: 20px 24px; margin: 16px 0; font-size: 20px; font-style: italic;
+            color: #2c2c2c; line-height: 1.6;
+        }
+        .speech-box .speaker-label {
+            display: block; font-style: normal; font-size: 12px; font-weight: 700;
+            color: #d4af37; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px;
+        }
+
+        /* INFO / TIP / WARNING BOXES */
+        .info-box {
+            background: #eef6ff; border-left: 5px solid #3b82f6; border-radius: 0 12px 12px 0;
+            padding: 16px 20px; margin: 14px 0; font-size: 15px; color: #1a3a5c;
+        }
+        .tip-box {
+            background: #f0fdf0; border-left: 5px solid #22c55e; border-radius: 0 12px 12px 0;
+            padding: 16px 20px; margin: 14px 0; font-size: 15px; color: #14532d;
+        }
+        .warn-box {
+            background: #fef3e2; border-left: 5px solid #f59e0b; border-radius: 0 12px 12px 0;
+            padding: 16px 20px; margin: 14px 0; font-size: 15px; color: #78350f;
+        }
+        .danger-box {
+            background: #fef2f2; border-left: 5px solid #ef4444; border-radius: 0 12px 12px 0;
+            padding: 16px 20px; margin: 14px 0; font-size: 15px; color: #7f1d1d;
+        }
+
+        .box-title { font-weight: 700; margin-bottom: 6px; font-size: 16px; }
+
+        /* BUTTONS */
+        .btn-group { display: flex; gap: 12px; margin-top: 24px; flex-wrap: wrap; }
+        .btn {
+            padding: 18px 32px; border: none; border-radius: 12px; font-size: 18px;
+            font-weight: 700; cursor: pointer; transition: all 0.2s; flex: 1; min-width: 140px;
+            text-align: center;
+        }
+        .btn-ja { background: #22c55e; color: #fff; }
+        .btn-ja:hover { background: #16a34a; transform: translateY(-1px); }
+        .btn-nein { background: #ef4444; color: #fff; }
+        .btn-nein:hover { background: #dc2626; transform: translateY(-1px); }
+        .btn-next { background: linear-gradient(135deg, #d4af37, #f0d060); color: #1a1a2e; }
+        .btn-next:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(212,175,55,0.4); }
+        .btn-back { background: #e5e7eb; color: #555; }
+        .btn-back:hover { background: #d1d5db; }
+        .btn-option {
+            background: #fff; border: 2px solid #d0d0d0; color: #1a1a2e; border-radius: 12px;
+            padding: 16px 20px; font-size: 16px; font-weight: 600; cursor: pointer;
+            transition: all 0.2s; text-align: left; width: 100%;
+        }
+        .btn-option:hover { border-color: #d4af37; background: #fffbf0; }
+
+        /* OBJECTION GRID */
+        .objection-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 16px 0; }
+        .objection-btn {
+            background: #fff; border: 2px solid #ddd; border-radius: 12px; padding: 16px;
+            font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.2s;
+            text-align: center; color: #1a1a2e;
+        }
+        .objection-btn:hover { border-color: #d4af37; background: #fffbf0; }
+
+        /* CHECKLIST */
+        .checklist { list-style: none; margin: 14px 0; }
+        .checklist li {
+            padding: 12px 16px; background: #fff; border: 1px solid #e5e7eb;
+            border-radius: 10px; margin-bottom: 8px; font-size: 16px; display: flex;
+            align-items: center; gap: 12px; cursor: pointer; transition: all 0.2s;
+        }
+        .checklist li:hover { border-color: #d4af37; }
+        .checklist li.checked { background: #f0fdf0; border-color: #86efac; }
+        .checklist li .check-icon { width: 24px; height: 24px; border: 2px solid #ccc; border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 14px; }
+        .checklist li.checked .check-icon { background: #22c55e; border-color: #22c55e; color: #fff; }
+
+        /* NOTES */
+        .notes-area {
+            width: 100%; min-height: 100px; border: 2px solid #ddd; border-radius: 12px;
+            padding: 16px; font-size: 16px; font-family: inherit; resize: vertical;
+            margin: 12px 0; background: #fff; color: #1a1a2e;
+        }
+        .notes-area:focus { outline: none; border-color: #d4af37; }
+        .notes-label { font-size: 14px; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+
+        /* EXPANDABLE */
+        .expandable { margin: 12px 0; }
+        .expand-toggle {
+            background: #fff; border: 2px solid #ddd; border-radius: 10px; padding: 14px 18px;
+            font-size: 16px; font-weight: 600; cursor: pointer; width: 100%; text-align: left;
+            display: flex; justify-content: space-between; align-items: center; transition: all 0.2s;
+        }
+        .expand-toggle:hover { border-color: #d4af37; }
+        .expand-toggle .arrow { transition: transform 0.3s; }
+        .expand-toggle.open .arrow { transform: rotate(180deg); }
+        .expand-content {
+            display: none; background: #fff; border: 2px solid #ddd; border-top: none;
+            border-radius: 0 0 10px 10px; padding: 18px;
+        }
+        .expand-content.show { display: block; }
+
+        /* SUB-SELECTION (for AnFi vs Allgemein) */
+        .sub-select { display: flex; gap: 12px; margin: 16px 0; }
+        .sub-select-btn {
+            flex: 1; padding: 20px; background: #fff; border: 2px solid #ddd;
+            border-radius: 14px; cursor: pointer; text-align: center; transition: all 0.2s;
+        }
+        .sub-select-btn:hover { border-color: #d4af37; background: #fffbf0; }
+        .sub-select-btn h4 { font-size: 18px; color: #1a1a2e; margin-bottom: 4px; }
+        .sub-select-btn p { font-size: 13px; color: #888; }
+
+        /* FOOTER NAV */
+        .footer-nav {
+            position: fixed; bottom: 0; left: 0; right: 0; background: #fff;
+            border-top: 2px solid #e5e7eb; padding: 12px 24px;
+            display: flex; justify-content: center; gap: 12px; z-index: 250;
+            box-shadow: 0 -4px 12px rgba(0,0,0,0.06);
+        }
+        .footer-nav .btn { max-width: 250px; }
+
+        /* SEPARATOR */
+        .sep { border: none; border-top: 2px solid #e8e8e8; margin: 24px 0; }
+
+        /* TEXT HELPERS */
+        .text-sm { font-size: 14px; color: #888; }
+        .text-gold { color: #d4af37; font-weight: 700; }
+        .text-bold { font-weight: 700; }
+        .mt { margin-top: 16px; }
+        .mb { margin-bottom: 16px; }
+
+        /* HIDDEN */
+        .hidden { display: none !important; }
+
+        /* GLOBAL NOTES PANEL */
+        .notes-panel-toggle {
+            position: fixed; bottom: 90px; right: 20px; z-index: 200;
+            width: 56px; height: 56px; border-radius: 50%; border: none;
+            background: linear-gradient(135deg, #1a1a2e, #16213e); color: #d4af37;
+            font-size: 24px; cursor: pointer; box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+            display: flex; align-items: center; justify-content: center; transition: all 0.2s;
+        }
+        .notes-panel-toggle:hover { transform: scale(1.1); }
+        .notes-panel-toggle .badge {
+            position: absolute; top: -4px; right: -4px; background: #ef4444; color: #fff;
+            font-size: 11px; font-weight: 700; min-width: 20px; height: 20px;
+            border-radius: 10px; display: flex; align-items: center; justify-content: center;
+        }
+        .notes-panel {
+            position: fixed; bottom: 0; right: 0; width: 400px; max-width: 100vw;
+            height: 70vh; background: #fff; border-left: 3px solid #d4af37;
+            border-top: 3px solid #d4af37; border-radius: 16px 0 0 0;
+            box-shadow: -8px -4px 30px rgba(0,0,0,0.15); z-index: 300;
+            display: flex; flex-direction: column; transition: transform 0.3s ease;
+            transform: translateX(110%);
+        }
+        .notes-panel.open { transform: translateX(0); }
+        .notes-panel-header {
+            background: #1a1a2e; color: #d4af37; padding: 16px 20px;
+            display: flex; justify-content: space-between; align-items: center;
+            border-radius: 14px 0 0 0; flex-shrink: 0;
+        }
+        .notes-panel-header h3 { font-size: 16px; font-weight: 700; letter-spacing: 1px; }
+        .notes-panel-close {
+            background: none; border: none; color: #aaa; font-size: 24px;
+            cursor: pointer; padding: 0 4px;
+        }
+        .notes-panel-close:hover { color: #fff; }
+        .notes-panel-body {
+            flex: 1; overflow-y: auto; padding: 16px;
+        }
+        .notes-panel-body .note-entry {
+            background: #fffbf0; border: 1px solid #f0e6c8; border-radius: 10px;
+            padding: 12px 14px; margin-bottom: 10px; font-size: 14px;
+        }
+        .notes-panel-body .note-entry .note-label {
+            font-size: 11px; font-weight: 700; color: #d4af37; text-transform: uppercase;
+            letter-spacing: 1px; margin-bottom: 4px;
+        }
+        .notes-panel-body .note-entry .note-text { color: #333; white-space: pre-wrap; }
+        .notes-panel-body .empty-msg { color: #aaa; text-align: center; margin-top: 40px; font-size: 15px; }
+        .notes-panel-input {
+            flex-shrink: 0; padding: 12px 16px; border-top: 1px solid #e5e7eb; background: #fafafa;
+        }
+        .notes-panel-input textarea {
+            width: 100%; min-height: 60px; border: 2px solid #ddd; border-radius: 10px;
+            padding: 10px 12px; font-size: 15px; font-family: inherit; resize: none;
+        }
+        .notes-panel-input textarea:focus { outline: none; border-color: #d4af37; }
+        .notes-panel-input .input-row { display: flex; gap: 8px; margin-top: 8px; }
+        .notes-panel-input .btn-add-note {
+            background: #1a1a2e; color: #d4af37; border: none; border-radius: 8px;
+            padding: 10px 20px; font-size: 14px; font-weight: 700; cursor: pointer; flex: 1;
+        }
+        .notes-panel-input .btn-add-note:hover { background: #16213e; }
+        .btn-pdf {
+            background: linear-gradient(135deg, #d4af37, #f0d060); color: #1a1a2e;
+            border: none; border-radius: 8px; padding: 10px 20px; font-size: 14px;
+            font-weight: 700; cursor: pointer; flex: 1;
+        }
+        .btn-pdf:hover { box-shadow: 0 4px 12px rgba(212,175,55,0.4); }
+
+        /* RESULT SCREEN */
+        .result-screen { animation: fadeIn 0.4s ease; }
+        .result-icon { font-size: 56px; text-align: center; margin-bottom: 16px; }
+        .result-title { font-size: 28px; font-weight: 800; text-align: center; margin-bottom: 24px; color: #1a1a2e; }
+        .result-notes { background: #fff; border: 2px solid #e5e7eb; border-radius: 14px; padding: 20px; margin: 16px 0; }
+        .result-notes h4 { font-size: 14px; color: #d4af37; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
+        .result-note-item { padding: 10px 0; border-bottom: 1px solid #f0f0f0; }
+        .result-note-item:last-child { border-bottom: none; }
+        .result-note-item .rn-label { font-size: 12px; font-weight: 700; color: #888; }
+        .result-note-item .rn-text { font-size: 15px; color: #1a1a2e; margin-top: 2px; white-space: pre-wrap; }
+
+        /* KI CHAT PANEL */
+        .ki-toggle {
+            position: fixed; top: 50%; right: 0; z-index: 280;
+            transform: translateY(-50%);
+            background: linear-gradient(135deg, #1a1a2e, #16213e); color: #d4af37;
+            border: 2px solid #d4af37; border-right: none;
+            border-radius: 12px 0 0 12px;
+            padding: 14px 10px; cursor: pointer; writing-mode: vertical-rl;
+            font-size: 13px; font-weight: 700; letter-spacing: 2px;
+            box-shadow: -4px 0 16px rgba(0,0,0,0.15);
+            transition: all 0.2s;
+        }
+        .ki-toggle:hover { padding-right: 14px; }
+        .ki-toggle.panel-open { right: 440px; }
+
+        .ki-panel {
+            position: fixed; top: 0; right: 0; width: 440px; max-width: 100vw;
+            height: 100vh; background: #fff; border-left: 3px solid #d4af37;
+            box-shadow: -8px 0 30px rgba(0,0,0,0.15); z-index: 290;
+            display: flex; flex-direction: column;
+            transform: translateX(100%); transition: transform 0.3s ease;
+        }
+        .ki-panel.open { transform: translateX(0); }
+
+        .ki-header {
+            background: #1a1a2e; color: #d4af37; padding: 12px 16px;
+            display: flex; justify-content: space-between; align-items: center; flex-shrink: 0;
+        }
+        .ki-header h3 { font-size: 15px; font-weight: 700; letter-spacing: 1px; }
+        .ki-header-btns { display: flex; gap: 8px; align-items: center; }
+        .ki-header-btns button {
+            background: none; border: 1px solid #555; color: #aaa; padding: 4px 10px;
+            border-radius: 5px; font-size: 11px; cursor: pointer;
+        }
+        .ki-header-btns button:hover { color: #d4af37; border-color: #d4af37; }
+        .ki-close { background: none; border: none; color: #888; font-size: 22px; cursor: pointer; padding: 0 4px; }
+        .ki-close:hover { color: #fff; }
+
+        .ki-quick {
+            display: flex; gap: 6px; padding: 8px 12px; overflow-x: auto; flex-shrink: 0;
+            border-bottom: 1px solid #eee; background: #fafafa;
+        }
+        .ki-quick::-webkit-scrollbar { height: 4px; }
+        .ki-quick::-webkit-scrollbar-thumb { background: #ddd; border-radius: 2px; }
+        .ki-quick-btn {
+            background: #fff; border: 1px solid #ddd; border-radius: 20px;
+            padding: 6px 12px; font-size: 12px; white-space: nowrap; cursor: pointer;
+            color: #1a1a2e; font-weight: 600; transition: all 0.15s; flex-shrink: 0;
+        }
+        .ki-quick-btn:hover { border-color: #d4af37; background: #fffbf0; }
+
+        .ki-messages {
+            flex: 1; overflow-y: auto; padding: 12px; display: flex;
+            flex-direction: column; gap: 10px;
+        }
+        .ki-msg { max-width: 92%; padding: 10px 14px; border-radius: 12px; font-size: 15px; line-height: 1.5; }
+        .ki-msg.user { align-self: flex-end; background: #fffbf0; border: 1px solid #f0e6c8; color: #1a1a2e; }
+        .ki-msg.ai { align-self: flex-start; background: #fff; border: 1px solid #e0e0e0; color: #1a1a2e; }
+        .ki-msg.ai ul, .ki-msg.ai ol { margin-left: 18px; margin-top: 4px; }
+        .ki-msg.ai li { margin-bottom: 3px; }
+        .ki-msg.ai strong { color: #1a1a2e; }
+        .ki-msg.typing { color: #888; font-style: italic; }
+        .ki-msg.error { background: #fef2f2; border-color: #fca5a5; color: #991b1b; }
+
+        .ki-input-area {
+            flex-shrink: 0; padding: 10px 12px; border-top: 1px solid #e5e7eb; background: #fafafa;
+            display: flex; gap: 8px; align-items: flex-end;
+        }
+        .ki-input-area textarea {
+            flex: 1; border: 2px solid #ddd; border-radius: 10px; padding: 10px 12px;
+            font-size: 15px; font-family: inherit; resize: none; min-height: 42px; max-height: 100px;
+            line-height: 1.4;
+        }
+        .ki-input-area textarea:focus { outline: none; border-color: #d4af37; }
+        .ki-send {
+            background: linear-gradient(135deg, #d4af37, #f0d060); color: #1a1a2e;
+            border: none; border-radius: 10px; padding: 10px 16px; font-size: 16px;
+            font-weight: 700; cursor: pointer; flex-shrink: 0;
+        }
+        .ki-send:hover { box-shadow: 0 4px 12px rgba(212,175,55,0.4); }
+
+        /* API Key Modal */
+        .ki-key-modal {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5); z-index: 500;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .ki-key-box {
+            background: #fff; border-radius: 16px; padding: 32px; max-width: 420px; width: 90%;
+            box-shadow: 0 16px 40px rgba(0,0,0,0.2);
+        }
+        .ki-key-box h3 { font-size: 20px; margin-bottom: 8px; color: #1a1a2e; }
+        .ki-key-box p { font-size: 14px; color: #666; margin-bottom: 16px; }
+        .ki-key-box input {
+            width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 10px;
+            font-size: 15px; font-family: monospace; margin-bottom: 12px;
+        }
+        .ki-key-box input:focus { outline: none; border-color: #d4af37; }
+        .ki-key-box .key-info { font-size: 12px; color: #999; margin-bottom: 16px; }
+        .ki-key-box button {
+            width: 100%; padding: 14px; background: #1a1a2e; color: #d4af37;
+            border: none; border-radius: 10px; font-size: 16px; font-weight: 700; cursor: pointer;
+        }
+
+        @media (max-width: 600px) {
+            .step-title { font-size: 24px; }
+            .speech-box { font-size: 18px; padding: 16px; }
+            .btn { padding: 16px 20px; font-size: 16px; }
+            .objection-grid { grid-template-columns: 1fr; }
+            .script-card { flex-direction: column; text-align: center; }
+            .script-card .card-badge { margin-left: 0; }
+            .ki-panel { width: 100%; }
+            .ki-toggle.panel-open { right: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="app-header">
+    <div>
+        <h1>ZINSBOUTIQUE</h1>
+        <div class="subtitle" id="headerSubtitle">Verkaufsskript-Tool</div>
+    </div>
+    <button class="btn-reset" onclick="goHome()">Zur Auswahl</button>
+</header>
+
+<div class="progress-container" id="progressContainer" style="display:none;">
+    <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressFill"></div></div>
+    <div class="progress-info">
+        <span class="current-phase" id="phaseLabel"></span>
+        <span id="stepCounter"></span>
+    </div>
+</div>
+
+<div class="main-content" id="mainContent"></div>
+
+<div class="footer-nav hidden" id="footerNav">
+    <button class="btn btn-back" id="btnFooterBack" onclick="goBack()">Zurueck</button>
+    <button class="btn btn-next" id="btnFooterNext" onclick="goNext()">Weiter</button>
+</div>
+
+<script>
+// =============================================
+// GLOBAL STATE
+// =============================================
+let currentScript = null; // 'quali', 'analyse', 'strategie', 'baulig'
+let qualiMode = 'allgemein'; // 'allgemein' or 'anfi'
+let steps = [];
+let currentStepIndex = 0;
+let history = [];
+let notes = {};
+
+const MC = document.getElementById('mainContent');
+const PC = document.getElementById('progressContainer');
+const FN = document.getElementById('footerNav');
+
+// =============================================
+// KUNDENSTAMMDATEN STEP (wird jedem Skript vorangestellt)
+// =============================================
+function getKundenstammStep() {
+    return {
+        id: 'kd', phase: 'Kundendaten', title: 'Kundenstammdaten',
+        content: `
+            <div class="info-box">
+                <div class="box-title">Erfasse die Basisdaten des Kunden</div>
+                Diese Daten werden in der PDF-Zusammenfassung am Ende mit ausgegeben.
+            </div>
+            <div style="display:grid;gap:12px;margin-top:16px;">
+                <div>
+                    <label style="font-size:13px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:1px;">Name des Kunden</label>
+                    <input type="text" class="notes-area" style="min-height:auto;padding:12px 16px;" placeholder="Vor- und Nachname" onchange="saveNote('kd_name', this.value)" value="">
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                    <div>
+                        <label style="font-size:13px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:1px;">Telefon</label>
+                        <input type="tel" class="notes-area" style="min-height:auto;padding:12px 16px;" placeholder="Telefonnummer" onchange="saveNote('kd_tel', this.value)" value="">
+                    </div>
+                    <div>
+                        <label style="font-size:13px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:1px;">E-Mail</label>
+                        <input type="email" class="notes-area" style="min-height:auto;padding:12px 16px;" placeholder="E-Mail-Adresse" onchange="saveNote('kd_email', this.value)" value="">
+                    </div>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                    <div>
+                        <label style="font-size:13px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:1px;">Vorhaben</label>
+                        <select class="notes-area" style="min-height:auto;padding:12px 16px;" onchange="saveNote('kd_vorhaben', this.value)">
+                            <option value="">-- Bitte waehlen --</option>
+                            <option value="Kauf Eigenheim">Kauf Eigenheim</option>
+                            <option value="Kauf Kapitalanlage">Kauf Kapitalanlage</option>
+                            <option value="Neubau">Neubau</option>
+                            <option value="Anschlussfinanzierung">Anschlussfinanzierung</option>
+                            <option value="Umschuldung">Umschuldung</option>
+                            <option value="Modernisierung">Modernisierung</option>
+                            <option value="Sonstiges">Sonstiges</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="font-size:13px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:1px;">Lead-Quelle</label>
+                        <select class="notes-area" style="min-height:auto;padding:12px 16px;" onchange="saveNote('kd_quelle', this.value)">
+                            <option value="">-- Bitte waehlen --</option>
+                            <option value="Online-Lead">Online-Lead</option>
+                            <option value="Empfehlung">Empfehlung / Zutraeger</option>
+                            <option value="Vertriebspartner">Vertriebspartner</option>
+                            <option value="Social Media">Social Media</option>
+                            <option value="Bestandskunde">Bestandskunde</option>
+                            <option value="Sonstiges">Sonstiges</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label style="font-size:13px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:1px;">Empfehlung von / Zutraeger</label>
+                    <input type="text" class="notes-area" style="min-height:auto;padding:12px 16px;" placeholder="Name des Zutraegers (optional)" onchange="saveNote('kd_zutraeger', this.value)" value="">
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                    <div>
+                        <label style="font-size:13px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:1px;">Beruf / Taetigkeit</label>
+                        <input type="text" class="notes-area" style="min-height:auto;padding:12px 16px;" placeholder="z.B. Angestellter, Selbstaendig..." onchange="saveNote('kd_beruf', this.value)" value="">
+                    </div>
+                    <div>
+                        <label style="font-size:13px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:1px;">Netto-Einkommen (ca.)</label>
+                        <input type="text" class="notes-area" style="min-height:auto;padding:12px 16px;" placeholder="z.B. 3.500 EUR" onchange="saveNote('kd_einkommen', this.value)" value="">
+                    </div>
+                </div>
+                <div>
+                    <label style="font-size:13px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:1px;">Sonstige Notizen zum Kunden</label>
+                    <textarea class="notes-area" style="min-height:70px;" placeholder="Partner, Kinder, Besonderheiten..." onchange="saveNote('kd_sonstiges', this.value)"></textarea>
+                </div>
+            </div>
+        `
+    };
+}
+
+// =============================================
+// SCRIPT DATA
+// =============================================
+
+function getQualiSteps(mode) {
+    const isAnfi = mode === 'anfi';
+    const topic = isAnfi ? 'Anschlussfinanzierung' : 'Immobilienfinanzierung';
+    const topicShort = isAnfi ? 'Anschlussfinanzierung' : 'Finanzierung';
+    return [
+        {
+            id: 'q1', phase: 'Phase 1: Einstieg', title: '1. Einstieg & Begruessung',
+            content: `
+                <div class="speech-box">
+                    <span class="speaker-label">Du sagst:</span>
+                    Hallo [NAME], hier ist [DEIN VORNAME] von Zinsboutique. Du hast dich bei uns ${isAnfi ? 'zum Thema Anschlussfinanzierung' : '[zum Thema xxx]'} eingetragen.
+                </div>
+                <div class="speech-box">
+                    <span class="speaker-label">Du sagst:</span>
+                    Hast du ca. 8-10 Minuten Zeit? Ich wuerde gerne kurz mit dir durchgehen, ob und wie wir dir helfen koennen.
+                </div>
+                <div class="info-box">
+                    <div class="box-title">Zinsboutique Vorstellung</div>
+                    Wir sind ein unabhaengiger Finanzierungsvermittler mit Zugang zu ueber 500 Banken. Du bekommst bei uns keine 0815-Loesung, sondern einen direkten Ansprechpartner, der den Markt fuer dich vergleicht.
+                </div>
+                <div class="tip-box">
+                    <div class="box-title">Tipp</div>
+                    Locker und freundlich bleiben. Kein Skript-Roboter! Natuerlich sprechen.
+                </div>
+            `
+        },
+        {
+            id: 'q1b', phase: 'Phase 1: Einstieg', title: 'Vorwand-Behandlung (falls noetig)',
+            content: `
+                <div class="warn-box"><div class="box-title">Nur nutzen wenn Einwaende kommen!</div></div>
+                <div class="objection-grid">
+                    <button class="objection-btn" onclick="showObjDetail('vb_zeit')">Keine Zeit</button>
+                    <button class="objection-btn" onclick="showObjDetail('vb_ausgefuellt')">Schon ausgefuellt</button>
+                    <button class="objection-btn" onclick="showObjDetail('vb_nicht_abschicken')">Wollte gar nicht abschicken</button>
+                    <button class="objection-btn" onclick="showObjDetail('vb_wer')">Wer bist du?</button>
+                    <button class="objection-btn" onclick="showObjDetail('vb_nicht_antworten')">Will nicht antworten</button>
+                </div>
+                <div id="objDetailVB" class="hidden" style="margin-top:12px;"></div>
+            `
+        },
+        {
+            id: 'q2', phase: 'Phase 2: IST-Situation', title: '2. IST-Situation erfragen',
+            content: `
+                <div class="speech-box">
+                    <span class="speaker-label">Du sagst:</span>
+                    ${isAnfi
+                        ? 'Erzaehl mal kurz - um was geht es genau bei deiner Anschlussfinanzierung? Wann laeuft dein aktuelles Darlehen aus?'
+                        : 'Erzaehl mal kurz - geht es um Kauf, Neubau, Kapitalanlage oder Anschlussfinanzierung?'
+                    }
+                </div>
+                <div class="speech-box">
+                    <span class="speaker-label">Du fragst:</span>
+                    Gibt es irgendetwas Relevantes, das ich wissen sollte? Besondere Umstaende?
+                </div>
+                <div class="info-box">
+                    <div class="box-title">Lead/Empfehlung Check</div>
+                    Woher kommt der Lead? Facebook? Google? Empfehlung? Das beeinflusst den Wissensstand.
+                </div>
+                <div class="notes-label mt">Notizen zur Situation</div>
+                <textarea class="notes-area" placeholder="Situation des Kunden notieren..." onchange="saveNote('q2_notes', this.value)">${notes['q2_notes']||''}</textarea>
+            `
+        },
+        {
+            id: 'q3', phase: 'Phase 2: IST-Situation', title: '3. Dringlichkeitsblock',
+            content: `
+                <div class="speech-box">
+                    <span class="speaker-label">Du fragst:</span>
+                    ${isAnfi
+                        ? 'Wann laeuft dein Darlehen aus? Hast du schon ein konkretes Angebot von deiner Bank bekommen?'
+                        : 'Wie dringend ist das Thema fuer dich? Auf einer Skala von 1 bis 10 - wo stehst du?'
+                    }
+                </div>
+                <div class="tip-box">
+                    <div class="box-title">Deadline-Skala 1-10</div>
+                    <strong>8-10:</strong> Super, dann lass uns keine Zeit verlieren.<br>
+                    <strong>5-7:</strong> Gut, dann hast du noch etwas Luft. Trotzdem lohnt es sich, frueh zu starten.<br>
+                    <strong>1-4:</strong> Verstehe. Aber gerade JETZT ist der beste Zeitpunkt - die Zinsen koennten sich aendern.
+                </div>
+                <div class="info-box">
+                    <div class="box-title">Falls keine Deadline</div>
+                    "Auch ohne festen Zeitdruck macht es Sinn, sich jetzt den besten Zins zu sichern. Die Konditionen koennen sich jederzeit aendern."
+                </div>
+                <div class="notes-label mt">Notizen zur Dringlichkeit</div>
+                <textarea class="notes-area" placeholder="Dringlichkeit, Zeitrahmen, Deadline notieren..." onchange="saveNote('q3_notes', this.value)">${notes['q3_notes']||''}</textarea>
+            `
+        },
+        {
+            id: 'q4', phase: 'Phase 3: Marktcheck', title: '4. Banken-/Vermittler-Check',
+            content: `
+                <div class="speech-box">
+                    <span class="speaker-label">Du fragst:</span>
+                    Mit wem hast du bisher gesprochen? Hast du schon Angebote eingeholt - von der Hausbank oder einem anderen Vermittler?
+                </div>
+                <div class="speech-box">
+                    <span class="speaker-label">Falls Angebot vorhanden:</span>
+                    Super, kannst du mir das Angebot schicken? Dann kann ich dir direkt zeigen, ob wir das toppen koennen. Das ist fuer uns auch ein guter Vergleichswert.
+                </div>
+                <div class="tip-box">
+                    <div class="box-title">Wichtig</div>
+                    Immer nach bestehendem Angebot fragen! Gibt uns einen Benchmark und zeigt uns, ob Konkurrenz im Spiel ist.
+                </div>
+                <div class="notes-label mt">Angebote / Konkurrenz notieren</div>
+                <textarea class="notes-area" placeholder="Welche Banken/Vermittler, welche Konditionen..." onchange="saveNote('q4_notes', this.value)">${notes['q4_notes']||''}</textarea>
+            `
+        },
+        {
+            id: 'q5', phase: 'Phase 3: Exklusivitaet', title: '5. Exklusivitaetsregel',
+            content: `
+                <div class="speech-box">
+                    <span class="speaker-label">Exklusiv-Pitch:</span>
+                    [NAME], bevor wir weitermachen - eins ist mir wichtig: Damit ich fuer dich das beste Ergebnis rausholen kann, muss ich wissen, dass wir exklusiv zusammenarbeiten. Das heisst: Ich vergleiche den kompletten Markt fuer dich - aber im Gegenzug reichst du nicht parallel bei anderen Vermittlern oder Banken ein. Deal?
+                </div>
+                <div class="warn-box">
+                    <div class="box-title">Warum Exklusivitaet?</div>
+                    Mehrfacheinreichungen fuehren zu Schufa-Problemen und Bankablehnungen. Exklusivitaet = bestes Ergebnis fuer den Kunden.
+                </div>
+                <hr class="sep">
+                <p class="text-bold mb">Falls Einwaende kommen - waehle den passenden:</p>
+                <div class="objection-grid">
+                    <button class="objection-btn" onclick="showObjDetail('ex_vergleichen')">Will vergleichen</button>
+                    <button class="objection-btn" onclick="showObjDetail('ex_woanders')">Woanders angefragt</button>
+                    <button class="objection-btn" onclick="showObjDetail('ex_hausbank')">Hausbank parallel</button>
+                    <button class="objection-btn" onclick="showObjDetail('ex_mehreren')">Mehreren vertrauen</button>
+                    <button class="objection-btn" onclick="showObjDetail('ex_nicht_festlegen')">Will sich nicht festlegen</button>
+                    <button class="objection-btn" onclick="showObjDetail('ex_erstmal_hoeren')">Will erstmal nur hoeren</button>
+                </div>
+                <div id="objDetailEX" class="hidden" style="margin-top:12px;"></div>
+            `
+        },
+        {
+            id: 'q6', phase: 'Phase 3: Exklusivitaet', title: '6. Commitment Exklusivitaet',
+            content: `
+                <div class="speech-box">
+                    <span class="speaker-label">Du fragst:</span>
+                    Passt das fuer dich? Koennen wir auf dieser Basis zusammenarbeiten?
+                </div>
+                <p class="text-bold mt mb">Wie reagiert der Kunde?</p>
+                <div style="display:grid;gap:10px;">
+                    <button class="btn-option" onclick="showObjDetail('c_ja')">Ja, passt!</button>
+                    <button class="btn-option" onclick="showObjDetail('c_hausbank')">Ja, aber Hausbank will ich selbst fragen</button>
+                    <button class="btn-option" onclick="showObjDetail('c_vergleichen')">Will trotzdem vergleichen</button>
+                    <button class="btn-option" onclick="showObjDetail('c_ablehnt')">Lehnt komplett ab</button>
+                </div>
+                <div id="objDetailC" class="hidden" style="margin-top:12px;"></div>
+            `
+        },
+        {
+            id: 'q7', phase: 'Phase 4: Pain & Ziel', title: '7. Aktueller Stand & Herausforderungen',
+            content: `
+                <div class="speech-box">
+                    <span class="speaker-label">Du fragst:</span>
+                    Was beschaeftigt dich aktuell am meisten bei dem Thema? Gibt es Sorgen oder Unsicherheiten?
+                </div>
+                <div class="speech-box">
+                    <span class="speaker-label">Nachhaken:</span>
+                    Was waere fuer dich das ideale Ergebnis? Was muss am Ende rauskommen, damit du sagst: "Das war genau richtig"?
+                </div>
+                <div class="tip-box">
+                    <div class="box-title">Pain & Ziel finden</div>
+                    Hier aktiv zuhoeren! Den emotionalen Treiber identifizieren: Sicherheit? Traumhaus? Familie? Vermoegensaufbau?
+                </div>
+                <div class="notes-label mt">Pain Points & Ziele</div>
+                <textarea class="notes-area" placeholder="Was treibt den Kunden an? Sorgen? Wuensche?" onchange="saveNote('q7_notes', this.value)">${notes['q7_notes']||''}</textarea>
+            `
+        },
+        {
+            id: 'q9', phase: 'Phase 4: Goldstandard #1', title: '9. Bisherige Unterstuetzung & Bedarfs-Commitment',
+            content: `
+                <div class="speech-box">
+                    <span class="speaker-label">Du fragst:</span>
+                    Hast du schon mal mit jemandem professionell zusammengearbeitet bei dem Thema? Einem Berater, Vermittler, Bankberater?
+                </div>
+                <div class="btn-group mb">
+                    <button class="btn btn-nein" onclick="showObjDetail('bis_nein')" style="flex:1;">Nein, noch nie</button>
+                    <button class="btn btn-ja" onclick="showObjDetail('bis_ja')" style="flex:1;">Ja, hatte jemanden</button>
+                </div>
+                <div id="objDetailBIS" class="hidden" style="margin-top:12px;"></div>
+                <hr class="sep">
+                <div class="speech-box">
+                    <span class="speaker-label">Bedarfs-Commitment (Goldstandard #1):</span>
+                    [NAME], mal ganz ehrlich: Wenn ich dir zeigen kann, dass wir den Markt fuer dich vergleichen, die beste Kondition finden und dich durch den gesamten Prozess begleiten - waere das etwas, was dir helfen wuerde?
+                </div>
+                <div class="warn-box">
+                    <div class="box-title">Falls er NEIN sagt:</div>
+                    <div style="display:grid;gap:8px;margin-top:8px;">
+                        <button class="btn-option" onclick="showObjDetail('bed_alleine')">Will es alleine machen</button>
+                        <button class="btn-option" onclick="showObjDetail('bed_hausbank')">Geht zur Hausbank</button>
+                        <button class="btn-option" onclick="showObjDetail('bed_andere')">Hat anderen Vermittler</button>
+                        <button class="btn-option" onclick="showObjDetail('bed_nein')">Sagt weiterhin Nein</button>
+                    </div>
+                </div>
+                <div id="objDetailBED" class="hidden" style="margin-top:12px;"></div>
+            `
+        },
+        {
+            id: 'q10', phase: 'Phase 5: Finanz-Check', title: '10. Finanz-Check',
+            content: `
+                <div class="speech-box">
+                    <span class="speaker-label">Du fragst:</span>
+                    Lass uns kurz die Eckdaten durchgehen. Wer finanziert? Du alleine oder mit Partner/in?
+                </div>
+                <div class="info-box">
+                    <div class="box-title">Entscheider-Pruefung (Goldstandard #3)</div>
+                    "Ist dein/e Partner/in bei der Entscheidung mit dabei? Muss noch jemand anderes einbezogen werden?"<br>
+                    <strong>Wichtig:</strong> Alle Entscheider muessen beim Analysegespraech dabei sein!
+                </div>
+                <div class="speech-box">
+                    <span class="speaker-label">Beruf erfragen:</span>
+                    Was machst du beruflich? Bist du angestellt oder selbstaendig?
+                </div>
+                <div class="expandable">
+                    <button class="expand-toggle" onclick="toggleExpand(this)">
+                        Angestellt: Nettoeinkommen <span class="arrow">&#9660;</span>
+                    </button>
+                    <div class="expand-content">
+                        <div class="speech-box" style="font-size:17px;">
+                            Was ist dein monatliches Nettoeinkommen? Gibt es Sonderzahlungen wie Weihnachtsgeld, Urlaubsgeld? Gibt es sonstiges Einkommen (Mieteinnahmen, Kindergeld, etc.)?
+                        </div>
+                    </div>
+                </div>
+                <div class="expandable">
+                    <button class="expand-toggle" onclick="toggleExpand(this)">
+                        Selbstaendig: EUeR, BWA, Steuerbescheide <span class="arrow">&#9660;</span>
+                    </button>
+                    <div class="expand-content">
+                        <div class="speech-box" style="font-size:17px;">
+                            Seit wann bist du selbstaendig? Hast du aktuelle BWAs und die letzten 2-3 Steuerbescheide? Wie sieht dein Gewinn der letzten Jahre aus?
+                        </div>
+                        <div class="warn-box">Selbstaendige brauchen IMMER: letzte 2-3 Steuerbescheide, aktuelle BWA, EUeR oder Bilanz</div>
+                    </div>
+                </div>
+                <div class="notes-label mt">Finanzdaten notieren</div>
+                <textarea class="notes-area" placeholder="Einkommen, Beruf, Partner, Entscheider..." onchange="saveNote('q10_notes', this.value)">${notes['q10_notes']||''}</textarea>
+            `
+        },
+        {
+            id: 'q11', phase: 'Phase 5: Ziele', title: '11. Ziele & Wuensche',
+            content: `
+                <div class="speech-box">
+                    <span class="speaker-label">Du fragst:</span>
+                    ${isAnfi
+                        ? 'Welche Ziele verfolgst du mit der Anschlussfinanzierung? Geht es dir primaer um eine niedrigere Rate, kuerzere Laufzeit, oder moechtest du Sondertilgungen nutzen?'
+                        : 'Was ist dein Budget bzw. Kaufpreis? Welche monatliche Rate schwebt dir vor? Gibt es Besonderheiten?'
+                    }
+                </div>
+                ${isAnfi ? `
+                <div class="info-box">
+                    <div class="box-title">AnFi-spezifische Fragen</div>
+                    <ul style="margin-left:16px;margin-top:8px;">
+                        <li>Ist das Objekt vermietet oder selbst genutzt?</li>
+                        <li>Stehen Modernisierungen an?</li>
+                        <li>Denkmalschutz?</li>
+                        <li>Probezeit oder Elternzeit?</li>
+                        <li>Wie hoch ist die aktuelle Restschuld?</li>
+                    </ul>
+                </div>` : `
+                <div class="info-box">
+                    <div class="box-title">Kapitalanlage vs. Selbstnutzer</div>
+                    <strong>Kapitalanlage:</strong> Strategie, Mietrendite, Steuervorteile, Cash-Flow<br>
+                    <strong>Selbstnutzer:</strong> Wunschrate, Sondertilgung, Laufzeit, Sicherheit
+                </div>`}
+                <div class="notes-label mt">Ziele & Wuensche notieren</div>
+                <textarea class="notes-area" placeholder="Budget, Rate, Besonderheiten..." onchange="saveNote('q11_notes', this.value)">${notes['q11_notes']||''}</textarea>
+            `
+        },
+        {
+            id: 'q11b', phase: 'Phase 5: Selbstauskunft', title: '11b. Selbstauskunft erklaeren',
+            content: `
+                <div class="speech-box">
+                    <span class="speaker-label">Du sagst:</span>
+                    [NAME], ich schicke dir gleich einen Link zu unserer Selbstauskunft. Das ist KEIN Antrag und KEINE Verpflichtung - es ist einfach ein digitales Formular, in dem du deine Daten eintraegst, damit ich fuer dich rechnen kann.
+                </div>
+                <div class="tip-box">
+                    <div class="box-title">Warum Selbstauskunft?</div>
+                    "Ohne die Daten kann ich nicht fuer dich rechnen. Es ist wie beim Arzt - ohne Diagnose keine Therapie. Deine Daten sind bei uns sicher und DSGVO-konform."
+                </div>
+                <div class="info-box">
+                    Die SA dauert ca. 10-15 Minuten. Am besten gleich nach dem Telefonat ausfuellen, solange alles frisch ist.
+                </div>
+            `
+        },
+        {
+            id: 'q12', phase: 'Phase 6: Termin', title: '12. Analyse-Termin buchen',
+            content: `
+                <div class="speech-box">
+                    <span class="speaker-label">Du sagst:</span>
+                    Super [NAME], dann lass uns direkt den naechsten Schritt machen. Ich schicke dir einen Buchungslink fuer unser Analysegespraech. Das dauert ca. 30-45 Minuten und wir machen das per Microsoft Teams - also bequem von zu Hause.
+                </div>
+                <div class="speech-box">
+                    <span class="speaker-label">Du sagst:</span>
+                    Wann passt es dir am besten? Eher vormittags oder nachmittags? Anfang oder Ende der Woche?
+                </div>
+                <div class="tip-box">
+                    <div class="box-title">Buchungslink schicken</div>
+                    Gleich waehrend des Telefonats den Link per WhatsApp oder E-Mail senden. Termin SOFORT fixieren, nicht aufschieben!
+                </div>
+            `
+        },
+        {
+            id: 'q13', phase: 'Phase 6: Unterlagen', title: '13. Unterlagen-Checkliste',
+            content: `
+                <div class="speech-box">
+                    <span class="speaker-label">Du sagst:</span>
+                    Damit wir im Analysegespraech effizient arbeiten koennen, brauche ich vorab ein paar Unterlagen von dir:
+                </div>
+                <ul class="checklist" id="checklistUnterlagen">
+                    <li onclick="toggleCheck(this)"><span class="check-icon"></span>Selbstauskunft (Link kommt per Mail)</li>
+                    <li onclick="toggleCheck(this)"><span class="check-icon"></span>Letzte 3 Gehaltsnachweise</li>
+                    <li onclick="toggleCheck(this)"><span class="check-icon"></span>Personalausweis (Vorder- & Rueckseite)</li>
+                    <li onclick="toggleCheck(this)"><span class="check-icon"></span>Expose / Objektunterlagen (falls vorhanden)</li>
+                    <li onclick="toggleCheck(this)"><span class="check-icon"></span>Kontoauszuege letzte 3 Monate</li>
+                    <li onclick="toggleCheck(this)"><span class="check-icon"></span>Letzter Steuerbescheid</li>
+                    ${isAnfi ? '<li onclick="toggleCheck(this)"><span class="check-icon"></span>Aktueller Darlehensvertrag / Prolongationsangebot</li>' : ''}
+                    ${isAnfi ? '<li onclick="toggleCheck(this)"><span class="check-icon"></span>Grundbuchauszug</li>' : ''}
+                </ul>
+                <div class="warn-box">
+                    <div class="box-title">Bei Selbstaendigen zusaetzlich:</div>
+                    Letzte 2-3 Steuerbescheide, aktuelle BWA, EUeR oder Bilanz, Gesellschaftsvertrag
+                </div>
+            `
+        },
+        {
+            id: 'q14', phase: 'Phase 6: Verbindlichkeit', title: '14. Verbindlichkeit sicherstellen',
+            content: `
+                <div class="speech-box">
+                    <span class="speaker-label">Du sagst:</span>
+                    [NAME], eins noch - ganz offen: Ohne die Unterlagen und die Selbstauskunft VOR dem Termin koennen wir das Analysegespraech nicht sinnvoll fuehren. In dem Fall muessten wir den Termin verschieben. Ist das okay fuer dich?
+                </div>
+                <div class="danger-box">
+                    <div class="box-title">Verbindlichkeits-Anker</div>
+                    Dieser Schritt ist ENTSCHEIDEND! Der Kunde muss verstehen: Ohne Unterlagen = kein Termin. Das filtert unverbindliche Leads raus.
+                </div>
+            `
+        },
+        {
+            id: 'q15', phase: 'Phase 6: E-Mail', title: '15. E-Mail Bestaetigung',
+            content: `
+                <div class="speech-box">
+                    <span class="speaker-label">Du sagst:</span>
+                    Perfekt, ich schicke dir jetzt eine E-Mail mit allem zusammengefasst: Den Link zur Selbstauskunft, den Buchungslink fuer den Termin, und die Unterlagen-Checkliste. Schau bitte gleich in dein Postfach.
+                </div>
+                <div class="info-box">
+                    <div class="box-title">E-Mail Inhalt</div>
+                    <ul style="margin-left:16px;margin-top:6px;">
+                        <li>Link zur Selbstauskunft</li>
+                        <li>Buchungslink / Terminbestaetigung</li>
+                        <li>Unterlagen-Checkliste</li>
+                        <li>Kontaktdaten des Beraters</li>
+                    </ul>
+                </div>
+            `
+        },
+        {
+            id: 'q16', phase: 'Phase 6: Abschluss', title: '16. Abschluss',
+            content: `
+                <div class="speech-box">
+                    <span class="speaker-label">Du sagst:</span>
+                    [NAME], hast du noch Fragen? ... Super, dann freue ich mich auf unser Analysegespraech am [DATUM]. Denk an die Unterlagen - dann koennen wir richtig Gas geben. Bis dann!
+                </div>
+                <div class="tip-box">
+                    <div class="box-title">Nach dem Gespraech</div>
+                    <ul style="margin-left:16px;margin-top:6px;">
+                        <li>E-Mail sofort senden</li>
+                        <li>Pipedrive updaten</li>
+                        <li>Termin im Kalender pruefen</li>
+                        <li>1 Tag vorher Reminder senden</li>
+                    </ul>
+                </div>
+                <div style="background:#f0fdf0;border:2px solid #22c55e;border-radius:16px;padding:24px;text-align:center;margin-top:24px;">
+                    <div style="font-size:28px;font-weight:800;color:#16a34a;">Qualifizierung abgeschlossen!</div>
+                    <div style="font-size:16px;color:#555;margin-top:8px;">Naechster Schritt: Analysegespraech (2/3)</div>
+                </div>
+            `
+        }
+    ];
+}
+
+function getAnalyseSteps() {
+    return [
+        {
+            id: 'a0', phase: 'Vorbereitung', title: '0. Innere Einstellung & Vorbereitung',
+            content: `
+                <div class="warn-box">
+                    <div class="box-title">Mindset-Check VOR dem Gespraech</div>
+                    <ul style="margin-left:16px;margin-top:8px;">
+                        <li>Gut gelaunt sein - Musik hoeren, positive Energie</li>
+                        <li>Jeder Kunde ist ein potenzieller Kaeufler</li>
+                        <li>Du bist der Experte - der Kunde sucht deine Hilfe</li>
+                        <li>Vorbereitung = Professionalitaet</li>
+                    </ul>
+                </div>
+                <div class="danger-box">
+                    <div class="box-title">ACHTUNG: Selbstauskunft muss vorliegen!</div>
+                    Ohne SA kann das Analysegespraech NICHT stattfinden. Falls SA fehlt: Termin verschieben und Kunden nochmal erinnern.
+                </div>
+                <ul class="checklist" id="checklistVorbereitung">
+                    <li onclick="toggleCheck(this)"><span class="check-icon"></span>Selbstauskunft liegt vor & geprueft</li>
+                    <li onclick="toggleCheck(this)"><span class="check-icon"></span>Unterlagen vom Kunden erhalten</li>
+                    <li onclick="toggleCheck(this)"><span class="check-icon"></span>Europace / Rechner vorbereitet</li>
+                    <li onclick="toggleCheck(this)"><span class="check-icon"></span>Teams-Link getestet</li>
+                    <li onclick="toggleCheck(this)"><span class="check-icon"></span>Notizen aus Quali-Gespraech gelesen</li>
+                </ul>
+            `
+        },
+        {
+            id: 'a1', phase: 'Phase 1: Begruessung', title: '1. Begruessung',
+            content: `
+                <div class="speech-box">
+                    <span class="speaker-label">Du sagst:</span>
+                    [NAME], schoen dass du da bist! Danke fuer die Selbstauskunft und die Unterlagen. Heute klaren wir alles final - am Ende weisst du genau, wo du stehst und wie wir weitermachen.
+                </div>
+                <div class="tip-box">
+                    <div class="box-title">Stimmung setzen</div>
+                    Locker, aber professionell. Zeig, dass du vorbereitet bist und die SA bereits angeschaut hast.
+                </div>
+            `
+        },
+        {
+            id: 'a2', phase: 'Phase 1: Analyse', title: '2. Interessenten analysieren',
+            content: `
+                <div class="speech-box">
+                    <span class="speaker-label">Du fragst:</span>
+                    [NAME], wo stehst du heute? Was hat sich seit unserem letzten Gespraech veraendert? Gibt es etwas, das wir unbedingt klaeren muessen?
+                </div>
+                <div class="warn-box">
+                    <div class="box-title">Exklusivitaets-Check (a-d bestaetigen)</div>
+                    <ul style="margin-left:16px;margin-top:8px;">
+                        <li>a) Du arbeitest exklusiv mit uns? ✓</li>
+                        <li>b) Keine parallelen Anfragen bei anderen? ✓</li>
+                        <li>c) Alle Entscheider sind heute dabei? ✓</li>
+                        <li>d) Du bist bereit, heute eine Entscheidung zu treffen? ✓</li>
+                    </ul>
+                </div>
+                <div class="notes-label mt">Updates / Aenderungen seit Quali</div>
+                <textarea class="notes-area" placeholder="Was hat sich veraendert?" onchange="saveNote('a2_notes', this.value)">${notes['a2_notes']||''}</textarea>
+            `
+        },
+        {
+            id: 'a3', phase: 'Phase 2: Vertrauen', title: '3. Deine Berechtigung im Markt',
+            content: `
+                <div class="speech-box">
+                    <span class="speaker-label">Persoenliche Story:</span>
+                    [NAME], kurz zu mir: Ich bin seit [X] Jahren in der Baufinanzierung. Was mich antreibt ist [persoenliche Motivation]. Ich habe schon [X] Finanzierungen begleitet und weiss genau, worauf es ankommt.
+                </div>
+                <div class="tip-box">
+                    <div class="box-title">Persoenliche Story erzaehlen</div>
+                    Warum Baufinanzierung? Was ist deine Erfahrung? Authentisch sein - keine Floskeln. Der Kunde soll spueren, dass er in guten Haenden ist.
+                </div>
+            `
+        },
+        {
+            id: 'a4', phase: 'Phase 2: Vertrauen', title: '4. Die Zinsboutique',
+            content: `
+                <div class="speech-box">
+                    <span class="speaker-label">Du sagst:</span>
+                    Wir arbeiten nicht fuer eine Bank, sondern wir vergleichen den gesamten Markt. Ueber 500 Bankpartner. Das heisst fuer dich: Du bekommst nicht das Produkt EINER Bank, sondern die beste Loesung aus dem gesamten Markt.
+                </div>
+                <div class="info-box">
+                    <div class="box-title">USPs betonen</div>
+                    <ul style="margin-left:16px;margin-top:6px;">
+                        <li>500+ Bankpartner</li>
+                        <li>Unabhaengig - arbeiten nicht fuer eine Bank</li>
+                        <li>Persoenlicher Ansprechpartner von A-Z</li>
+                        <li>Kostenlos fuer den Kunden</li>
+                        <li>Schnelle Bearbeitung</li>
+                    </ul>
+                </div>
+            `
+        },
+        {
+            id: 'a5', phase: 'Phase 2: Vertrauen', title: '5. Vorgehensweise erklaeren',
+            content: `
+                <div class="speech-box">
+                    <span class="speaker-label">Du sagst:</span>
+                    Unser Vorgehen hat 3 klare Schritte:
+                </div>
+                <div style="display:grid;gap:12px;margin:16px 0;">
+                    <div style="background:#fff;border:2px solid #d4af37;border-radius:12px;padding:18px;display:flex;gap:14px;align-items:center;">
+                        <div style="background:#1a1a2e;color:#d4af37;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;flex-shrink:0;">1</div>
+                        <div><strong>Analyse:</strong> Wir gehen deine Situation komplett durch - Einkommen, Vermogen, Objekt, Ziele.</div>
+                    </div>
+                    <div style="background:#fff;border:2px solid #d4af37;border-radius:12px;padding:18px;display:flex;gap:14px;align-items:center;">
+                        <div style="background:#1a1a2e;color:#d4af37;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;flex-shrink:0;">2</div>
+                        <div><strong>Bankgerecht aufbereiten:</strong> Ich bereite alles so auf, dass die Banken sofort sehen: Top-Kunde.</div>
+                    </div>
+                    <div style="background:#fff;border:2px solid #d4af37;border-radius:12px;padding:18px;display:flex;gap:14px;align-items:center;">
+                        <div style="background:#1a1a2e;color:#d4af37;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;flex-shrink:0;">3</div>
+                        <div><strong>Gezielt mit Banken sprechen:</strong> Ich verhandle fuer dich die besten Konditionen.</div>
+                    </div>
+                </div>
+                <div class="speech-box">
+                    <span class="speaker-label">Commitment holen:</span>
+                    Klingt das fuer dich nach einem guten Plan?
+                </div>
+            `
+        },
+        {
+            id: 'a6', phase: 'Phase 3: Analyse', title: '6. Die Analyse - Rahmen setzen',
+            content: `
+                <div class="speech-box">
+                    <span class="speaker-label">Du sagst:</span>
+                    Okay [NAME], jetzt geht's ins Detail. Ich teile meinen Bildschirm und wir gehen Schritt fuer Schritt alles durch. Das wird ca. 20-25 Minuten dauern. Ist das okay?
+                </div>
+                <div class="warn-box">
+                    <div class="box-title">Bildschirm teilen!</div>
+                    Europace oeffnen und den Kunden live mitnehmen. Transparenz schafft Vertrauen.
+                </div>
+                <ul class="checklist" id="checklistAnalyse">
+                    <li onclick="toggleCheck(this)"><span class="check-icon"></span>Bildschirm geteilt</li>
+                    <li onclick="toggleCheck(this)"><span class="check-icon"></span>Europace geoeffnet</li>
+                </ul>
+            `
+        },
+        {
+            id: 'a6a', phase: 'Phase 3: Antragsteller', title: '6a. Persoenliche Daten & Beruf',
+            content: `
+                <div class="speech-box">
+                    <span class="speaker-label">Du sagst:</span>
+                    Ich gehe jetzt deine persoenlichen Daten durch, die du in der Selbstauskunft angegeben hast. Bitte korrigier mich, wenn etwas nicht stimmt.
+                </div>
+                <div class="info-box">
+                    <div class="box-title">Durchgehen</div>
+                    <ul style="margin-left:16px;margin-top:6px;">
+                        <li>Name, Geburtsdatum, Adresse</li>
+                        <li>Familienstand, Kinder</li>
+                        <li>Beruf, Arbeitgeber, seit wann</li>
+                        <li>Einkommen (Details je nach Anstellung)</li>
+                    </ul>
+                </div>
+                <div class="expandable">
+                    <button class="expand-toggle" onclick="toggleExpand(this)">
+                        Angestellte: Einkommen <span class="arrow">&#9660;</span>
+                    </button>
+                    <div class="expand-content">
+                        Nettoeinkommen, Bruttoeinkommen, Sonderzahlungen (Weihnachtsgeld, Urlaubsgeld, 13. Gehalt), befristet/unbefristet, Probezeit
+                    </div>
+                </div>
+                <div class="expandable">
+                    <button class="expand-toggle" onclick="toggleExpand(this)">
+                        Selbstaendige: Einkommen <span class="arrow">&#9660;</span>
+                    </button>
+                    <div class="expand-content">
+                        Gewinn laut Steuerbescheid (letzte 2-3 Jahre), aktuelle BWA, Art der Selbstaendigkeit, Branche, seit wann, Gesellschaftsform
+                    </div>
+                </div>
+                <div class="notes-label mt">Notizen Antragsteller</div>
+                <textarea class="notes-area" placeholder="Besonderheiten zum Antragsteller..." onchange="saveNote('a6a_notes', this.value)">${notes['a6a_notes']||''}</textarea>
+            `
+        },
+        {
+            id: 'a6b', phase: 'Phase 3: Vermoegen', title: '6b. Vermoegen & Eigenkapital',
+            content: `
+                <div class="speech-box">
+                    <span class="speaker-label">Du sagst:</span>
+                    Jetzt zum Thema Eigenkapital und Vermoegen. Das ist ein wichtiger Punkt fuer die Bank.
+                </div>
+                <div class="info-box">
+                    <div class="box-title">EK-Psychologie</div>
+                    Viele Kunden untertreiben beim EK. Alle Vermoegenswerte systematisch abfragen:
+                </div>
+                <ul class="checklist" id="checklistEK">
+                    <li onclick="toggleCheck(this)"><span class="check-icon"></span>Sparbuch / Tagesgeld / Festgeld</li>
+                    <li onclick="toggleCheck(this)"><span class="check-icon"></span>Bausparvertraege</li>
+                    <li onclick="toggleCheck(this)"><span class="check-icon"></span>Aktiendepot / ETFs / Fonds</li>
+                    <li onclick="toggleCheck(this)"><span class="check-icon"></span>Lebensversicherung (Rueckkaufswert)</li>
+                    <li onclick="toggleCheck(this)"><span class="check-icon"></span>Weitere Immobilien</li>
+                    <li onclick="toggleCheck(this)"><span class="check-icon"></span>Geschenk/Darlehen von Familie</li>
+                    <li onclick="toggleCheck(this)"><span class="check-icon"></span>Eigenleistung (Muskelhypothek)</li>
+                </ul>
+                <div class="notes-label mt">Vermoegen / EK</div>
+                <textarea class="notes-area" placeholder="EK-Summe, Quellen..." onchange="saveNote('a6b_notes', this.value)">${notes['a6b_notes']||''}</textarea>
+            `
+        },
+        {
+            id: 'a6c', phase: 'Phase 3: Verbindlichkeiten', title: '6c. Verbindlichkeiten',
+            content: `
+                <div class="speech-box">
+                    <span class="speaker-label">Du fragst:</span>
+                    Hast du laufende Verbindlichkeiten? Ratenkredite, Leasing, Dispo, Klarna, Kreditkarten?
+                </div>
+                <ul class="checklist" id="checklistVerb">
+                    <li onclick="toggleCheck(this)"><span class="check-icon"></span>Ratenkredite</li>
+                    <li onclick="toggleCheck(this)"><span class="check-icon"></span>Auto-Leasing / Finanzierung</li>
+                    <li onclick="toggleCheck(this)"><span class="check-icon"></span>Dispo-Kredit</li>
+                    <li onclick="toggleCheck(this)"><span class="check-icon"></span>Klarna / PayPal Ratenzahlung</li>
+                    <li onclick="toggleCheck(this)"><span class="check-icon"></span>Kreditkarten-Schulden</li>
+                    <li onclick="toggleCheck(this)"><span class="check-icon"></span>Buergschaften</li>
+                    <li onclick="toggleCheck(this)"><span class="check-icon"></span>Unterhaltsverpflichtungen</li>
+                </ul>
+                <div class="warn-box">
+                    <div class="box-title">Wichtig</div>
+                    Alle Verbindlichkeiten muessen raus! Banken pruefen die Schufa - lieber proaktiv angeben als boese Ueberraschung.
+                </div>
+                <div class="notes-label mt">Verbindlichkeiten</div>
+                <textarea class="notes-area" placeholder="Details zu Verbindlichkeiten..." onchange="saveNote('a6c_notes', this.value)">${notes['a6c_notes']||''}</textarea>
+            `
+        },
+        {
+            id: 'a6d', phase: 'Phase 3: Schufa', title: '6d. Schufa & Bonitaet',
+            content: `
+                <div class="speech-box">
+                    <span class="speaker-label">Du fragst:</span>
+                    Kurze Frage zur Schufa: Ist dir bekannt, ob es da Eintraege gibt? Negativmerkmale, Mahnbescheide, Inkasso?
+                </div>
+                <div class="danger-box">
+                    <div class="box-title">Schufa-Probleme = Showstopper</div>
+                    Bei negativen Schufa-Eintraegen sofort klaeren! Manche Banken finanzieren trotzdem, aber die Auswahl wird deutlich kleiner.
+                </div>
+                <div class="notes-label mt">Schufa-Status</div>
+                <textarea class="notes-area" placeholder="Schufa-Status, eventuelle Eintraege..." onchange="saveNote('a6d_notes', this.value)">${notes['a6d_notes']||''}</textarea>
+            `
+        },
+        {
+            id: 'a6e', phase: 'Phase 3: Objekt', title: '6e. Objektanalyse',
+            content: `
+                <div class="speech-box">
+                    <span class="speaker-label">Du sagst:</span>
+                    Jetzt zum Objekt. Lass uns die Details durchgehen.
+                </div>
+                <div class="info-box">
+                    <div class="box-title">Basisdaten Objekt</div>
+                    <ul style="margin-left:16px;margin-top:6px;">
+                        <li>Art: ETW, EFH, MFH, Grundstueck?</li>
+                        <li>PLZ, Ort, Lage</li>
+                        <li>Kaufpreis / Baukosten</li>
+                        <li>Wohnflaeche, Grundstueck</li>
+                        <li>Baujahr, Zustand</li>
+                        <li>Kaufnebenkosten (Notar, Grunderwerbsteuer, Makler)</li>
+                    </ul>
+                </div>
+                <div class="expandable">
+                    <button class="expand-toggle" onclick="toggleExpand(this)">
+                        Kritische Punkte pruefen <span class="arrow">&#9660;</span>
+                    </button>
+                    <div class="expand-content">
+                        <ul style="margin-left:16px;">
+                            <li>Erbbaurecht?</li>
+                            <li>Denkmalschutz?</li>
+                            <li>Baulasten / Altlasten?</li>
+                            <li>Wegerecht?</li>
+                            <li>Teilungserklaerung / WEG-Protokolle?</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="expandable">
+                    <button class="expand-toggle" onclick="toggleExpand(this)">
+                        Kapitalanlage vs. Eigennutzer <span class="arrow">&#9660;</span>
+                    </button>
+                    <div class="expand-content">
+                        <strong>Kapitalanlage:</strong> Mieteinnahmen, Leerstandsrisiko, AfA, Cash-Flow-Rechnung<br>
+                        <strong>Eigennutzer:</strong> Wohnbeduerfnisse, Modernisierungsplaene, Foerdermittel (KfW)
+                    </div>
+                </div>
+                <div class="notes-label mt">Objekt-Notizen</div>
+                <textarea class="notes-area" placeholder="Objekt-Details..." onchange="saveNote('a6e_notes', this.value)">${notes['a6e_notes']||''}</textarea>
+            `
+        },
+        {
+            id: 'a6f', phase: 'Phase 3: Kalkulation', title: '6f. Struktur & Kalkulation',
+            content: `
+                <div class="speech-box">
+                    <span class="speaker-label">Du sagst:</span>
+                    Jetzt rechne ich das Ganze live fuer dich durch. Du siehst meinen Bildschirm - ich zeige dir, wie die Kalkulation aussieht.
+                </div>
+                <div class="warn-box">
+                    <div class="box-title">Europace LIVE zeigen</div>
+                    <ul style="margin-left:16px;margin-top:6px;">
+                        <li>Daten eingeben waehrend Kunde zuschaut</li>
+                        <li>Verschiedene Szenarien durchspielen</li>
+                        <li>Zinsbindung, Tilgung, Sondertilgung erklaeren</li>
+                        <li>Kunden einbinden: "Was denkst du?"</li>
+                    </ul>
+                </div>
+                <div class="notes-label mt">Kalkulations-Notizen</div>
+                <textarea class="notes-area" placeholder="Ergebnisse, Varianten..." onchange="saveNote('a6f_notes', this.value)">${notes['a6f_notes']||''}</textarea>
+            `
+        },
+        {
+            id: 'a10', phase: 'Phase 4: Ziele', title: '10. Ziele verankern',
+            content: `
+                <div class="speech-box">
+                    <span class="speaker-label">Du fragst:</span>
+                    [NAME], basierend auf allem was wir besprochen haben - was MUSS die Finanzierung fuer dich leisten? Was waere ein Nice-to-have? Und gibt es ein absolutes No-Go?
+                </div>
+                <div style="display:grid;gap:12px;margin:16px 0;">
+                    <div style="background:#f0fdf0;border:2px solid #22c55e;border-radius:12px;padding:16px;">
+                        <strong style="color:#16a34a;">MUSS:</strong>
+                        <textarea class="notes-area" style="min-height:60px;margin-top:8px;" placeholder="Was muss die Finanzierung leisten?" onchange="saveNote('a10_muss', this.value)">${notes['a10_muss']||''}</textarea>
+                    </div>
+                    <div style="background:#eef6ff;border:2px solid #3b82f6;border-radius:12px;padding:16px;">
+                        <strong style="color:#2563eb;">NICE TO HAVE:</strong>
+                        <textarea class="notes-area" style="min-height:60px;margin-top:8px;" placeholder="Was waere schoen?" onchange="saveNote('a10_nice', this.value)">${notes['a10_nice']||''}</textarea>
+                    </div>
+                    <div style="background:#fef2f2;border:2px solid #ef4444;border-radius:12px;padding:16px;">
+                        <strong style="color:#dc2626;">NO-GO:</strong>
+                        <textarea class="notes-area" style="min-height:60px;margin-top:8px;" placeholder="Was geht gar nicht?" onchange="saveNote('a10_nogo', this.value)">${notes['a10_nogo']||''}</textarea>
+                    </div>
+                </div>
+            `
+        },
+        {
+            id: 'a11', phase: 'Phase 5: Naechste Schritte', title: '11. Naechste Schritte',
+            content: `
+                <div class="speech-box">
+                    <span class="speaker-label">Du sagst:</span>
+                    [NAME], super - ich habe jetzt ein klares Bild. Was ich jetzt mache: Ich bereite 3 konkrete Optionen fuer dich vor. Unterschiedliche Banken, unterschiedliche Strukturen - damit du vergleichen kannst.
+                </div>
+                <div class="info-box">
+                    <div class="box-title">3 Optionen vorbereiten</div>
+                    <ul style="margin-left:16px;margin-top:6px;">
+                        <li>Option 1: Sicherheitsorientiert (laengere Zinsbindung)</li>
+                        <li>Option 2: Optimal (Sweet Spot aus Zins und Flexibilitaet)</li>
+                        <li>Option 3: Flexibel (maximale Sondertilgung / kuerzere Bindung)</li>
+                    </ul>
+                </div>
+            `
+        },
+        {
+            id: 'a12', phase: 'Phase 5: Unterlagen', title: '12. Angebote & Unterlagenuebersicht',
+            content: `
+                <div class="speech-box">
+                    <span class="speaker-label">Du sagst:</span>
+                    Folgendes brauche ich noch von dir, damit ich die Angebote einholen kann:
+                </div>
+                <div class="notes-label">Fehlende Unterlagen notieren</div>
+                <textarea class="notes-area" placeholder="Welche Unterlagen fehlen noch?" onchange="saveNote('a12_notes', this.value)">${notes['a12_notes']||''}</textarea>
+            `
+        },
+        {
+            id: 'a13', phase: 'Phase 5: Makler', title: '13. Unterstuetzung beim Makler (optional)',
+            content: `
+                <div class="speech-box">
+                    <span class="speaker-label">Du fragst:</span>
+                    Brauchst du Unterstuetzung beim Makler? Soll ich eine Finanzierungsbestaetigung ausstellen, damit du beim Makler einen Vorteil hast?
+                </div>
+                <div class="tip-box">
+                    <div class="box-title">Finanzierungsbestaetigung</div>
+                    Eine vorlaeufige Bestaetigung kann dem Kunden beim Makler einen Wettbewerbsvorteil verschaffen. Zeigt dem Verkaeufer: "Dieser Kaeufler ist finanziert."
+                </div>
+            `
+        },
+        {
+            id: 'a14', phase: 'Phase 6: Termin', title: '14. Angebot-Termin fixieren',
+            content: `
+                <div class="speech-box">
+                    <span class="speaker-label">Du sagst:</span>
+                    Ich brauche ca. 2-3 Tage, um die Angebote aufzubereiten. Lass uns direkt den Termin fuer das Strategiegespraech fixieren - da gehen wir die 3 Optionen durch und du entscheidest, welchen Weg wir gehen.
+                </div>
+                <div class="speech-box">
+                    <span class="speaker-label">Du fragst:</span>
+                    Passt dir [DATUM] um [UHRZEIT]? Das dauert ca. 30-45 Minuten.
+                </div>
+                <div class="warn-box">
+                    <div class="box-title">Termin SOFORT fixieren!</div>
+                    Nicht sagen "ich melde mich". Konkreten Termin vereinbaren und Buchungslink senden.
+                </div>
+            `
+        },
+        {
+            id: 'a15', phase: 'Phase 6: Geschwindigkeit', title: '15. Geschwindigkeit & Entscheidung',
+            content: `
+                <div class="speech-box">
+                    <span class="speaker-label">Du sagst:</span>
+                    [NAME], ein wichtiger Punkt: Wenn wir die Angebote haben, muessen wir relativ zuegig handeln. Konditionen sind meist nur 3-5 Tage gueltig. Deshalb ist es wichtig, dass du im Strategiegespraech entscheidungsbereit bist.
+                </div>
+                <div class="info-box">
+                    Entscheidungsdruck aufbauen - aber ehrlich! Konditionen aendern sich wirklich schnell.
+                </div>
+            `
+        },
+        {
+            id: 'a16', phase: 'Phase 6: Termin', title: '16. Termin fixieren & Zusammenfassung',
+            content: `
+                <div class="speech-box">
+                    <span class="speaker-label">Du sagst:</span>
+                    Also nochmal zusammengefasst: Ich bereite 3 Optionen vor, schicke sie dir vorab per Mail, und am [DATUM] gehen wir sie gemeinsam durch. Passt?
+                </div>
+                <ul class="checklist" id="checklistTermin">
+                    <li onclick="toggleCheck(this)"><span class="check-icon"></span>Termin fixiert</li>
+                    <li onclick="toggleCheck(this)"><span class="check-icon"></span>Buchungslink gesendet</li>
+                    <li onclick="toggleCheck(this)"><span class="check-icon"></span>Fehlende Unterlagen angefordert</li>
+                </ul>
+            `
+        },
+        {
+            id: 'a17', phase: 'Phase 6: Abschluss', title: '17. Abschluss',
+            content: `
+                <div class="speech-box">
+                    <span class="speaker-label">Du sagst:</span>
+                    [NAME], du bist in guten Haenden. Ich kuemmere mich jetzt um alles und melde mich, sobald die Angebote stehen. Bei Fragen erreichst du mich jederzeit. Bis zum Strategiegespraech!
+                </div>
+                <div style="background:#f0fdf0;border:2px solid #22c55e;border-radius:16px;padding:24px;text-align:center;margin-top:24px;">
+                    <div style="font-size:28px;font-weight:800;color:#16a34a;">Analysegespraech abgeschlossen!</div>
+                    <div style="font-size:16px;color:#555;margin-top:8px;">Naechster Schritt: Strategiegespraech (3/3)</div>
+                </div>
+            `
+        }
+    ];
+}
+
+function getStrategieSteps() {
+    return [
+        {
+            id: 's0', phase: 'Vorbereitung', title: '0. Innere Einstellung',
+            content: `
+                <div class="warn-box">
+                    <div class="box-title">Mindset VOR dem Gespraech</div>
+                    <ul style="margin-left:16px;margin-top:8px;">
+                        <li>Energie & Souveraenitaet ausstrahlen</li>
+                        <li>Du hast die besten Optionen - der Kunde hat Glueck</li>
+                        <li>Optionen sind vorbereitet und durchgerechnet</li>
+                        <li>HEUTE wird entschieden - kein "ich ueberlege nochmal"</li>
+                    </ul>
+                </div>
+                <ul class="checklist">
+                    <li onclick="toggleCheck(this)"><span class="check-icon"></span>3 Optionen vorbereitet</li>
+                    <li onclick="toggleCheck(this)"><span class="check-icon"></span>Angebote vorab an Kunden gesendet</li>
+                    <li onclick="toggleCheck(this)"><span class="check-icon"></span>Vergleichsangebot analysiert (falls vorhanden)</li>
+                    <li onclick="toggleCheck(this)"><span class="check-icon"></span>Europace / Praesentations-Unterlagen bereit</li>
+                </ul>
+            `
+        },
+        {
+            id: 's1', phase: 'Phase 1: Begruessung', title: '1. Begruessung',
+            content: `
+                <div class="speech-box">
+                    <span class="speaker-label">Du sagst:</span>
+                    [NAME], schoen dich wiederzusehen! Du hast die Angebote vorab bekommen. Heute gehen wir sie gemeinsam durch und finden die beste Loesung fuer dich.
+                </div>
+                <div class="speech-box">
+                    <span class="speaker-label">Du fragst:</span>
+                    Konntest du dir die Angebote schon anschauen? Hattest du Zeit, sie in Ruhe durchzugehen?
+                </div>
+            `
+        },
+        {
+            id: 's2a', phase: 'Phase 1: Konkurrenz', title: '2a. Konkurrenzangebot klaeren',
+            content: `
+                <div class="speech-box">
+                    <span class="speaker-label">Du fragst:</span>
+                    Bevor wir starten - hast du zwischenzeitlich noch ein anderes Angebot bekommen? Von der Hausbank oder woanders?
+                </div>
+                <p class="text-bold mt mb">Wie ist die Situation?</p>
+                <div style="display:grid;gap:10px;">
+                    <button class="btn-option" onclick="showObjDetail('konk_kein')">Variante A: Kein Fremdangebot</button>
+                    <button class="btn-option" onclick="showObjDetail('konk_hat')">Variante B: Hat eins, nicht geschickt</button>
+                    <button class="btn-option" onclick="showObjDetail('konk_geschickt')">Variante C: Hat es geschickt</button>
+                </div>
+                <div id="objDetailKONK" class="hidden" style="margin-top:12px;"></div>
+            `
+        },
+        {
+            id: 's2b', phase: 'Phase 1: Rueckblick', title: '2b. Rueckblick Analysegespraech',
+            content: `
+                <div class="speech-box">
+                    <span class="speaker-label">Du fragst:</span>
+                    Was hat sich seit unserem Analysegespraech veraendert? Gibt es neue Entwicklungen - beim Objekt, bei der Finanzierung, privat?
+                </div>
+                <div class="notes-label mt">Updates notieren</div>
+                <textarea class="notes-area" placeholder="Aenderungen seit Analysegespraech..." onchange="saveNote('s2b_notes', this.value)">${notes['s2b_notes']||''}</textarea>
+            `
+        },
+        {
+            id: 's3', phase: 'Phase 2: Rahmen setzen', title: '3. Erwartungen setzen',
+            content: `
+                <div class="speech-box">
+                    <span class="speaker-label">Du sagst:</span>
+                    [NAME], bevor wir in die Angebote gehen, lass mich kurz den Rahmen setzen: Das ist kein "wir schauen mal"-Termin. Heute gehen wir die Optionen durch und am Ende entscheiden wir gemeinsam, welchen Weg wir gehen.
+                </div>
+                <div class="speech-box">
+                    <span class="speaker-label">Du fragst:</span>
+                    Deal?
+                </div>
+                <div class="danger-box">
+                    <div class="box-title">Entscheidungs-Commitment</div>
+                    Dieses "Deal?" ist ENTSCHEIDEND. Der Kunde muss JETZT zusagen, dass er heute eine Entscheidung trifft. Sonst wird es ein unverbindliches "ich ueberlege nochmal".
+                </div>
+            `
+        },
+        {
+            id: 's4', phase: 'Phase 2: Vertrauen', title: '4. Transparenz & Vertrauen',
+            content: `
+                <div class="speech-box">
+                    <span class="speaker-label">Du sagst:</span>
+                    [NAME], weisst du, warum viele Finanzierungen scheitern? Nicht wegen der Zinsen. Sondern weil die Beratung schlecht ist. Falsche Bank, falsche Struktur, Zeitdruck am Ende. Genau das passiert bei uns nicht.
+                </div>
+                <div class="speech-box">
+                    <span class="speaker-label">Unser Unterschied:</span>
+                    Wir haben den gesamten Markt fuer dich verglichen. Die 3 Optionen, die ich dir jetzt zeige, sind nicht zufaellig - sie sind strategisch ausgewaehlt. Jede hat ihre Staerke.
+                </div>
+            `
+        },
+        {
+            id: 's5', phase: 'Phase 2: Ziel', title: '5. Persoenliches Ziel verankern',
+            content: `
+                <div class="speech-box">
+                    <span class="speaker-label">Du fragst:</span>
+                    [NAME], nochmal kurz: Was ist DIR am wichtigsten? Maximale Sicherheit? Die niedrigste Rate? Oder eine gute Balance aus beidem?
+                </div>
+                <div class="tip-box">
+                    <div class="box-title">Ziel als Anker nutzen</div>
+                    Die Antwort nutzt du spaeter, um deine Empfehlung zu begruenden: "Du hast gesagt, Sicherheit ist dir am wichtigsten - deshalb empfehle ich Option X."
+                </div>
+                <div class="notes-label mt">Persoenliches Ziel</div>
+                <textarea class="notes-area" placeholder="Was ist dem Kunden am wichtigsten?" onchange="saveNote('s5_notes', this.value)">${notes['s5_notes']||''}</textarea>
+            `
+        },
+        {
+            id: 's6', phase: 'Phase 3: Optionen', title: '6. Praesentation der 3 Optionen',
+            content: `
+                <div class="speech-box">
+                    <span class="speaker-label">Du sagst:</span>
+                    Okay [NAME], jetzt zeige ich dir die 3 Optionen. Ich erklaere jede einzeln, und am Ende besprechen wir, welche am besten zu dir passt.
+                </div>
+                <div style="display:grid;gap:16px;margin:20px 0;">
+                    <div style="background:#f0fdf0;border:2px solid #22c55e;border-radius:14px;padding:20px;">
+                        <div style="font-size:20px;font-weight:800;color:#16a34a;margin-bottom:8px;">Option 1: Sicherheit</div>
+                        <div style="font-size:15px;color:#555;">Laengere Zinsbindung (15-20J), niedrigere Tilgung, maximale Planungssicherheit</div>
+                        <div class="notes-label mt">Details</div>
+                        <textarea class="notes-area" style="min-height:50px;" placeholder="Bank, Zins, Rate..." onchange="saveNote('s6_opt1', this.value)">${notes['s6_opt1']||''}</textarea>
+                    </div>
+                    <div style="background:#eef6ff;border:2px solid #3b82f6;border-radius:14px;padding:20px;">
+                        <div style="font-size:20px;font-weight:800;color:#2563eb;margin-bottom:8px;">Option 2: Optimal (Sweet Spot)</div>
+                        <div style="font-size:15px;color:#555;">Beste Balance aus Zins, Flexibilitaet und Sicherheit</div>
+                        <div class="notes-label mt">Details</div>
+                        <textarea class="notes-area" style="min-height:50px;" placeholder="Bank, Zins, Rate..." onchange="saveNote('s6_opt2', this.value)">${notes['s6_opt2']||''}</textarea>
+                    </div>
+                    <div style="background:#fffbf0;border:2px solid #d4af37;border-radius:14px;padding:20px;">
+                        <div style="font-size:20px;font-weight:800;color:#8a6d1b;margin-bottom:8px;">Option 3: Flexibel</div>
+                        <div style="font-size:15px;color:#555;">Maximale Sondertilgung, kuerzere Bindung, niedrigster Zins</div>
+                        <div class="notes-label mt">Details</div>
+                        <textarea class="notes-area" style="min-height:50px;" placeholder="Bank, Zins, Rate..." onchange="saveNote('s6_opt3', this.value)">${notes['s6_opt3']||''}</textarea>
+                    </div>
+                </div>
+            `
+        },
+        {
+            id: 's7', phase: 'Phase 3: Vergleich', title: '7. Vergleich mit Fremdangebot',
+            content: `
+                <div class="speech-box">
+                    <span class="speaker-label">Falls Fremdangebot vorhanden:</span>
+                    [NAME], lass uns das Angebot von [BANK/VERMITTLER] daneben legen. Schau dir den Unterschied an...
+                </div>
+                <div class="info-box">
+                    <div class="box-title">Vergleichspunkte</div>
+                    <ul style="margin-left:16px;margin-top:6px;">
+                        <li>Effektivzins (nicht nur Sollzins!)</li>
+                        <li>Tilgungssatz & Sondertilgung</li>
+                        <li>Zinsbindung</li>
+                        <li>Restschuld nach Zinsbindung</li>
+                        <li>Gesamtkosten ueber Laufzeit</li>
+                        <li>Bereitstellungszinsen</li>
+                        <li>Service & Begleitung</li>
+                    </ul>
+                </div>
+                <div class="tip-box">
+                    Falls kein Fremdangebot: Diesen Schritt ueberspringen.
+                </div>
+            `
+        },
+        {
+            id: 's8', phase: 'Phase 4: Empfehlung', title: '8. Deine Empfehlung',
+            content: `
+                <div class="speech-box">
+                    <span class="speaker-label">Du sagst:</span>
+                    [NAME], meine klare Empfehlung ist Option [X] mit [BANK Y]. Und zwar aus folgendem Grund: [Bezug auf persoenliches Ziel des Kunden]. Du hast gesagt, [ZIEL] ist dir am wichtigsten - und genau das liefert diese Option.
+                </div>
+                <div class="warn-box">
+                    <div class="box-title">IMMER eine klare Empfehlung aussprechen!</div>
+                    Nicht sagen "entscheide du" - der Kunde will eine Empfehlung vom Experten. Sei klar und begruende es mit seinem eigenen Ziel.
+                </div>
+            `
+        },
+        {
+            id: 's9', phase: 'Phase 4: Entscheidung', title: '9. Entscheidung einholen',
+            content: `
+                <div class="speech-box">
+                    <span class="speaker-label">Du fragst:</span>
+                    [NAME], wollen wir diesen Weg zusammen gehen?
+                </div>
+                <div class="btn-group mb">
+                    <button class="btn btn-ja" onclick="showObjDetail('ent_ja')" style="flex:1;">Ja!</button>
+                    <button class="btn btn-nein" onclick="showObjDetail('ent_nein')" style="flex:1;">Einwaende</button>
+                </div>
+                <div id="objDetailENT" class="hidden" style="margin-top:12px;"></div>
+                <hr class="sep">
+                <p class="text-bold mb">Falls Einwaende - waehle den passenden:</p>
+                <div class="objection-grid">
+                    <button class="objection-btn" onclick="showObjDetail('se_ueberlegen')">Will ueberlegen</button>
+                    <button class="objection-btn" onclick="showObjDetail('se_vergleichen')">Will noch vergleichen</button>
+                    <button class="objection-btn" onclick="showObjDetail('se_spaeter')">Spaeter entscheiden</button>
+                    <button class="objection-btn" onclick="showObjDetail('se_konkurrenz')">Konkurrenz ist besser</button>
+                </div>
+                <div id="objDetailSE" class="hidden" style="margin-top:12px;"></div>
+            `
+        },
+        {
+            id: 's10', phase: 'Phase 5: Einreichung', title: '10. Bankeinreichung vorbereiten',
+            content: `
+                <div class="speech-box">
+                    <span class="speaker-label">Du sagst:</span>
+                    Super [NAME]! Dann lass uns jetzt alles fuer die Einreichung vorbereiten. Folgende Unterlagen brauche ich noch:
+                </div>
+                <div class="notes-label">Fehlende Unterlagen</div>
+                <textarea class="notes-area" placeholder="Was fehlt noch fuer die Einreichung?" onchange="saveNote('s10_notes', this.value)">${notes['s10_notes']||''}</textarea>
+            `
+        },
+        {
+            id: 's11', phase: 'Phase 5: Ablauf', title: '11. Ablauf nach Einreichung',
+            content: `
+                <div class="speech-box">
+                    <span class="speaker-label">Du sagst:</span>
+                    So laeuft es jetzt ab:
+                </div>
+                <div style="display:grid;gap:10px;margin:16px 0;">
+                    <div style="background:#fff;border-left:4px solid #d4af37;padding:14px 18px;border-radius:0 10px 10px 0;">
+                        <strong>Schritt 1:</strong> Ich reiche heute bei [BANK] ein.
+                    </div>
+                    <div style="background:#fff;border-left:4px solid #d4af37;padding:14px 18px;border-radius:0 10px 10px 0;">
+                        <strong>Schritt 2:</strong> Die Bank prueft - das dauert ca. 2-5 Werktage.
+                    </div>
+                    <div style="background:#fff;border-left:4px solid #d4af37;padding:14px 18px;border-radius:0 10px 10px 0;">
+                        <strong>Schritt 3:</strong> Sobald die Zusage da ist, bekommst du die Vertragsunterlagen.
+                    </div>
+                    <div style="background:#fff;border-left:4px solid #d4af37;padding:14px 18px;border-radius:0 10px 10px 0;">
+                        <strong>Schritt 4:</strong> Vertrag unterschreiben, Notar-Termin, fertig!
+                    </div>
+                </div>
+                <div class="info-box">
+                    Ich halte dich ueber jeden Schritt auf dem Laufenden. Du hoerst von mir, sobald es Neuigkeiten gibt.
+                </div>
+            `
+        },
+        {
+            id: 's12', phase: 'Phase 5: Abschluss', title: '12. Abschluss',
+            content: `
+                <div class="speech-box">
+                    <span class="speaker-label">Du sagst:</span>
+                    [NAME], starke Entscheidung! Wir begleiten dich bis zur finalen Finanzierung - und darueber hinaus. Bei Fragen bin ich jederzeit fuer dich da. Ich melde mich, sobald die Bank rueckmeldet. Bis dahin - feier deine Entscheidung!
+                </div>
+                <div style="background:linear-gradient(135deg,#f0fdf0,#eef6ff);border:2px solid #22c55e;border-radius:16px;padding:28px;text-align:center;margin-top:24px;">
+                    <div style="font-size:32px;font-weight:800;color:#16a34a;">Strategiegespraech abgeschlossen!</div>
+                    <div style="font-size:18px;color:#555;margin-top:10px;">Finanzierung eingereicht - Glueckwunsch!</div>
+                </div>
+            `
+        }
+    ];
+}
+
+function getBauligSteps() {
+    return [
+        {
+            id: 'b1', phase: 'Phase 1: Rapport', title: '1. Rapport aufbauen',
+            content: `
+                <div class="speech-box">
+                    <span class="speaker-label">Du sagst:</span>
+                    Hey [NAME], schoen dass du dir die Zeit nimmst! Wie geht's dir heute?
+                </div>
+                <div class="tip-box">
+                    <div class="box-title">Rapport-Techniken</div>
+                    <ul style="margin-left:16px;margin-top:6px;">
+                        <li>Spiegeln: Sprachstil des Kunden uebernehmen</li>
+                        <li>Gemeinsamkeiten finden</li>
+                        <li>Echtes Interesse zeigen</li>
+                        <li>Namen des Kunden nutzen</li>
+                    </ul>
+                </div>
+                <div class="speech-box">
+                    <span class="speaker-label">Du fragst:</span>
+                    Erzaehl mal, was machst du aktuell beruflich? Was beschaeftigt dich gerade?
+                </div>
+            `
+        },
+        {
+            id: 'b2', phase: 'Phase 2: Situation', title: '2. IST-Situation & Problem',
+            content: `
+                <div class="speech-box">
+                    <span class="speaker-label">Du fragst:</span>
+                    Wo stehst du gerade? Was ist deine groesste Herausforderung? Was hast du schon probiert?
+                </div>
+                <div class="info-box">
+                    <div class="box-title">Pain Points identifizieren</div>
+                    Aktiv zuhoeren! Lass den Kunden reden. Notiere die Schmerzen - die brauchst du spaeter fuer den Pitch.
+                </div>
+                <div class="speech-box">
+                    <span class="speaker-label">Nachhaken:</span>
+                    Und wie fuehlt sich das an? Was bedeutet das fuer dich persoenlich, wenn sich nichts aendert?
+                </div>
+                <div class="notes-label mt">Pain Points</div>
+                <textarea class="notes-area" placeholder="Was sind die Hauptprobleme?" onchange="saveNote('b2_notes', this.value)">${notes['b2_notes']||''}</textarea>
+            `
+        },
+        {
+            id: 'b3', phase: 'Phase 3: Vision', title: '3. Wunsch-Situation & Ziel',
+            content: `
+                <div class="speech-box">
+                    <span class="speaker-label">Du fragst:</span>
+                    Stell dir vor, in 6-12 Monaten ist alles so, wie du es dir wuenschst. Wie sieht das aus? Was hat sich veraendert?
+                </div>
+                <div class="speech-box">
+                    <span class="speaker-label">Nachhaken:</span>
+                    Warum ist dir das wichtig? Was wuerde sich in deinem Leben aendern?
+                </div>
+                <div class="tip-box">
+                    <div class="box-title">Emotionen wecken</div>
+                    Je konkreter der Kunde sein Ziel beschreibt, desto staerker die Motivation. "Malen lassen" - Details erfragen!
+                </div>
+                <div class="notes-label mt">Wunsch-Situation</div>
+                <textarea class="notes-area" placeholder="Was ist das Ziel des Kunden?" onchange="saveNote('b3_notes', this.value)">${notes['b3_notes']||''}</textarea>
+            `
+        },
+        {
+            id: 'b4', phase: 'Phase 4: Luecke', title: '4. Die Luecke aufzeigen',
+            content: `
+                <div class="speech-box">
+                    <span class="speaker-label">Du sagst:</span>
+                    Okay [NAME], lass mich zusammenfassen: Du bist aktuell bei [IST] und willst zu [SOLL]. Die Frage ist: Was hindert dich daran, das alleine zu schaffen?
+                </div>
+                <div class="warn-box">
+                    <div class="box-title">Gap-Analyse</div>
+                    Hier wird dem Kunden klar: Alleine kommt er nicht weiter. Er braucht Unterstuetzung. NICHT manipulieren - ehrlich die Luecke aufzeigen.
+                </div>
+                <div class="speech-box">
+                    <span class="speaker-label">Du fragst:</span>
+                    Was glaubs du - was fehlt dir, um von hier nach da zu kommen?
+                </div>
+            `
+        },
+        {
+            id: 'b5', phase: 'Phase 5: Loesung', title: '5. Die Loesung praesentieren',
+            content: `
+                <div class="speech-box">
+                    <span class="speaker-label">Du sagst:</span>
+                    Genau dafuer sind wir da. Unser Programm hilft dir, [ZIEL] zu erreichen, indem wir [METHODE/LOESUNG]. Konkret bedeutet das fuer dich:
+                </div>
+                <div class="info-box">
+                    <div class="box-title">Loesung praesentierten</div>
+                    <ul style="margin-left:16px;margin-top:6px;">
+                        <li>Bezug auf seine Pain Points nehmen</li>
+                        <li>Konkrete Ergebnisse nennen</li>
+                        <li>Social Proof: "Andere Kunden in deiner Situation haben..."</li>
+                        <li>Nicht zu viele Features - Fokus auf ERGEBNIS</li>
+                    </ul>
+                </div>
+            `
+        },
+        {
+            id: 'b6', phase: 'Phase 6: Einwaende', title: '6. Einwandbehandlung',
+            content: `
+                <div class="speech-box">
+                    <span class="speaker-label">Du fragst:</span>
+                    [NAME], was denkst du? Gibt es etwas, das dich noch zurueckhaelt?
+                </div>
+                <p class="text-bold mt mb">Typische Einwaende:</p>
+                <div class="objection-grid">
+                    <button class="objection-btn" onclick="showObjDetail('bl_preis')">Zu teuer</button>
+                    <button class="objection-btn" onclick="showObjDetail('bl_zeit')">Keine Zeit</button>
+                    <button class="objection-btn" onclick="showObjDetail('bl_ueberlegen')">Muss ueberlegen</button>
+                    <button class="objection-btn" onclick="showObjDetail('bl_partner')">Muss Partner fragen</button>
+                    <button class="objection-btn" onclick="showObjDetail('bl_spaeter')">Spaeter</button>
+                    <button class="objection-btn" onclick="showObjDetail('bl_funktioniert')">Funktioniert nicht bei mir</button>
+                </div>
+                <div id="objDetailBL" class="hidden" style="margin-top:12px;"></div>
+            `
+        },
+        {
+            id: 'b7', phase: 'Phase 7: Abschluss', title: '7. Abschluss & Onboarding',
+            content: `
+                <div class="speech-box">
+                    <span class="speaker-label">Du sagst:</span>
+                    [NAME], super Entscheidung! Lass uns direkt loslegen. Als naechstes passiert Folgendes: [ONBOARDING-SCHRITTE]
+                </div>
+                <div class="tip-box">
+                    <div class="box-title">Nach dem Closing</div>
+                    <ul style="margin-left:16px;margin-top:6px;">
+                        <li>Zahlung abwickeln</li>
+                        <li>Onboarding-Mail senden</li>
+                        <li>Ersten Termin fixieren</li>
+                        <li>Willkommen im Team!</li>
+                    </ul>
+                </div>
+                <div style="background:linear-gradient(135deg,#f0fdf0,#fffbf0);border:2px solid #d4af37;border-radius:16px;padding:28px;text-align:center;margin-top:24px;">
+                    <div style="font-size:28px;font-weight:800;color:#d4af37;">Deal abgeschlossen!</div>
+                    <div style="font-size:16px;color:#555;margin-top:8px;">Glueckwunsch zum Closing!</div>
+                </div>
+            `
+        }
+    ];
+}
+
+// =============================================
+// OBJECTION DETAIL TEXTS
+// =============================================
+const objections = {
+    // Vorwand-Behandlung (Einstieg)
+    vb_zeit: { title: 'Keine Zeit', box: 'VB', text: '<div class="speech-box" style="font-size:17px;"><span class="speaker-label">Du sagst:</span>Verstehe ich total. Ich fass mich kurz - es geht wirklich nur um 5 Minuten. Wir klaeren kurz, ob es Sinn macht, und wenn ja, machen wir einen separaten Termin. Fair?</div>' },
+    vb_ausgefuellt: { title: 'Schon ausgefuellt', box: 'VB', text: '<div class="speech-box" style="font-size:17px;"><span class="speaker-label">Du sagst:</span>Super, dann hast du ja schon den ersten Schritt gemacht! Lass uns kurz schauen, ob wir dir weiterhelfen koennen. Das dauert wirklich nur 5 Minuten.</div>' },
+    vb_nicht_abschicken: { title: 'Gar nicht abschicken wollen', box: 'VB', text: '<div class="speech-box" style="font-size:17px;"><span class="speaker-label">Du sagst:</span>Kein Problem! Ich rufe an, weil sich jemand mit deinen Daten eingetragen hat. Wenn du kein Interesse hast, ist das voellig okay. Darf ich kurz fragen - beschaeftigt dich das Thema Finanzierung generell?</div>' },
+    vb_wer: { title: 'Wer bist du?', box: 'VB', text: '<div class="speech-box" style="font-size:17px;"><span class="speaker-label">Du sagst:</span>Gute Frage! Mein Name ist [VORNAME], ich bin Finanzierungsberater bei Zinsboutique. Wir sind ein unabhaengiger Vermittler mit Zugang zu ueber 500 Banken. Du hast dich bei uns eingetragen - ich wollte persoenlich schauen, wie wir dir helfen koennen.</div>' },
+    vb_nicht_antworten: { title: 'Will nicht antworten', box: 'VB', text: '<div class="speech-box" style="font-size:17px;"><span class="speaker-label">Du sagst:</span>Das respektiere ich. Darf ich dir kurz sagen, warum ich anrufe? Danach entscheidest du, ob es Sinn macht. Fair?</div>' },
+
+    // Exklusivitaet Einwaende
+    ex_vergleichen: { title: 'Will vergleichen', box: 'EX', text: '<div class="speech-box" style="font-size:17px;"><span class="speaker-label">Du sagst:</span>Das verstehe ich - Vergleichen ist smart. Aber genau das ist mein Job: Ich vergleiche 500+ Banken fuer dich. Wenn du parallel bei 3 Banken anfragst, hast du 3 Angebote. Bei mir hast du 500. Und keine Schufa-Probleme.</div><div class="tip-box"><strong>Kompromiss-Frame:</strong> "Versprich mir eins: Bevor du woanders unterschreibst, ruf mich an. Ich bin der Letzte, den du fragst - und dann vergleichen wir."</div>' },
+    ex_woanders: { title: 'Woanders angefragt', box: 'EX', text: '<div class="speech-box" style="font-size:17px;"><span class="speaker-label">Du sagst:</span>Okay, bei wem? ... Verstehe. Schau, das Problem bei Mehrfachanfragen: Jede Bank prueft die Schufa. Das kann deinen Score verschlechtern und zu Ablehnungen fuehren. Lass uns das sauber loesen - ich kuemmere mich um alles.</div><div class="tip-box"><strong>Kompromiss-Frame:</strong> "Versprich mir, dass ich der Letzte bin, den du fragst."</div>' },
+    ex_hausbank: { title: 'Hausbank parallel', box: 'EX', text: '<div class="speech-box" style="font-size:17px;"><span class="speaker-label">Du sagst:</span>Verstehe ich. Die Hausbank kennt dich, das Vertrauen ist da. Aber: Deine Hausbank hat EIN Produkt - ihres. Ich habe 500. Und ich kann dein Hausbank-Angebot als Vergleich nutzen. Wie waere es so: Du holst dir das Angebot von der Hausbank, schickst es mir, und ich zeige dir, ob ich das toppen kann?</div>' },
+    ex_mehreren: { title: 'Mehreren vertrauen', box: 'EX', text: '<div class="speech-box" style="font-size:17px;"><span class="speaker-label">Du sagst:</span>Vertrauen ist gut - aber Mehrfacheinreichungen sind ein echtes Risiko. Banken sehen das in der Schufa und werten es negativ. Stell dir vor, du gehst zum Arzt - du gehst auch nicht zu 5 gleichzeitig und nimmst 5 verschiedene Medikamente. Einen Experten, dem du vertraust - das reicht.</div>' },
+    ex_nicht_festlegen: { title: 'Will sich nicht festlegen', box: 'EX', text: '<div class="speech-box" style="font-size:17px;"><span class="speaker-label">Du sagst:</span>Ich verstehe das. Und ich sage auch nicht, dass du dich heute fuer eine Bank festlegen musst. Ich sage nur: Lass MICH den Markt fuer dich vergleichen - exklusiv. Das ist kostenlos fuer dich, kein Risiko, keine Verpflichtung. Aber so kann ich das Beste rausholen.</div>' },
+    ex_erstmal_hoeren: { title: 'Will erstmal nur hoeren', box: 'EX', text: '<div class="speech-box" style="font-size:17px;"><span class="speaker-label">Du sagst:</span>Klar, genau dafuer bin ich da. Und du wirst sehen: Nachdem wir die Analyse gemacht haben, hast du einen vollstaendigen Ueberblick. Kein anderer Vermittler kann dir DAS bieten. Also lass uns starten - hoeren kostet nichts.</div>' },
+
+    // Commitment Exklusivitaet
+    c_ja: { title: 'Ja, passt!', box: 'C', text: '<div class="tip-box" style="font-size:18px;"><strong>Super!</strong> Direkt weiter zum naechsten Schritt. Nicht nochmal nachfragen - Commitment steht!</div>' },
+    c_hausbank: { title: 'Ja, aber Hausbank selbst', box: 'C', text: '<div class="speech-box" style="font-size:17px;"><span class="speaker-label">Du sagst:</span>Okay, Deal: Du holst dir das Angebot von der Hausbank und schickst es mir. Ich vergleiche es mit meinen 500 Banken. Aber bitte: Schick nur das Angebot weiter, unterschreib nichts bei denen. Deal?</div>' },
+    c_vergleichen: { title: 'Will trotzdem vergleichen', box: 'C', text: '<div class="speech-box" style="font-size:17px;"><span class="speaker-label">Du sagst:</span>[NAME], ich respektiere das. Aber lass mich dir eine Frage stellen: Wenn ich dir zeigen kann, dass mein Angebot besser ist als alles, was du auf dem Markt findest - wuerdest du dann mit mir arbeiten? ... Dann lass mich das beweisen. Gib mir die Chance.</div>' },
+    c_ablehnt: { title: 'Lehnt komplett ab', box: 'C', text: '<div class="danger-box"><strong>Harte Ablehnung.</strong> Respektieren, aber offene Tuer lassen:</div><div class="speech-box" style="font-size:17px;"><span class="speaker-label">Du sagst:</span>Okay [NAME], das respektiere ich. Ich sage dir aber ehrlich: Ohne Exklusivitaet kann ich nicht das Maximum rausholen. Wenn du es dir anders ueberlegst - melde dich jederzeit. Ich bin fuer dich da.</div>' },
+
+    // Bisherige Unterstuetzung
+    bis_nein: { title: 'Noch nie mit jemandem gearbeitet', box: 'BIS', text: '<div class="speech-box" style="font-size:17px;"><span class="speaker-label">Du sagst (verwundert):</span>Wirklich? Bei einem so wichtigen Thema wie einer Finanzierung von mehreren Hunderttausend Euro hast du noch nie mit einem Profi gearbeitet? Dann wird es hoechste Zeit! Genau dafuer bin ich da.</div>' },
+    bis_ja: { title: 'Ja, hatte jemanden', box: 'BIS', text: '<div class="speech-box" style="font-size:17px;"><span class="speaker-label">Du fragst:</span>Okay, und warum arbeitest du nicht mehr mit denen? Was hat gefehlt? Was haettest du dir anders gewuenscht?</div><div class="tip-box">Die Antwort zeigt dir, was der Kunde WIRKLICH sucht. Nutze das!</div>' },
+
+    // Bedarfs-Commitment Nein
+    bed_alleine: { title: 'Will es alleine machen', box: 'BED', text: '<div class="speech-box" style="font-size:17px;"><span class="speaker-label">Du sagst:</span>Respekt, wenn du das alleine stemmen willst. Aber ueberleg mal: Bei 500 Banken den besten Zins zu finden, die Unterlagen bankgerecht aufzubereiten, mit den Banken zu verhandeln - das ist ein Vollzeitjob. Ich mache das taeglich. Warum nicht diese Expertise kostenlos nutzen?</div>' },
+    bed_hausbank: { title: 'Geht zur Hausbank', box: 'BED', text: '<div class="speech-box" style="font-size:17px;"><span class="speaker-label">Du sagst:</span>Verstehe. Aber deine Hausbank hat EIN Produkt. Ich vergleiche 500. Allein dadurch sparst du im Schnitt 0,2-0,5% Zinsen. Bei 300.000 Euro und 20 Jahren sind das 20.000-50.000 Euro. Ist es das nicht wert?</div>' },
+    bed_andere: { title: 'Hat anderen Vermittler', box: 'BED', text: '<div class="speech-box" style="font-size:17px;"><span class="speaker-label">Du sagst:</span>Okay, kein Problem. Kannst du mir sagen, mit wem du arbeitest? ... Schau, ich habe nichts gegen Wettbewerb. Aber gib mir die Chance, dir zu zeigen, was wir koennen. Wenn der andere besser ist - kein Problem.</div>' },
+    bed_nein: { title: 'Sagt weiterhin Nein', box: 'BED', text: '<div class="danger-box"><strong>Lead ist nicht bereit.</strong> Nicht erzwingen! Offene Tuer lassen.</div><div class="speech-box" style="font-size:17px;"><span class="speaker-label">Du sagst:</span>Okay [NAME], ich respektiere das. Falls sich deine Situation aendert, weisst du, wo du mich findest. Ich wuensche dir alles Gute!</div>' },
+
+    // Konkurrenz (Strategiegespraech)
+    konk_kein: { title: 'Kein Fremdangebot', box: 'KONK', text: '<div class="tip-box" style="font-size:17px;"><strong>Perfekt!</strong> Kein Konkurrenzangebot = du bist der einzige Berater. Nutze das als Bestaetigung der Exklusivitaet: "Super, dann koennen wir uns voll auf unsere Optionen konzentrieren."</div>' },
+    konk_hat: { title: 'Hat eins, nicht geschickt', box: 'KONK', text: '<div class="speech-box" style="font-size:17px;"><span class="speaker-label">Du sagst:</span>Okay, kannst du mir das schnell schicken? Per WhatsApp oder Mail - dann kann ich es direkt mit unseren Optionen vergleichen. So siehst du schwarz auf weiss den Unterschied.</div>' },
+    konk_geschickt: { title: 'Hat es geschickt', box: 'KONK', text: '<div class="speech-box" style="font-size:17px;"><span class="speaker-label">Du sagst:</span>Super, ich habe mir das angeschaut. Lass uns das nachher direkt nebeneinander legen - dann siehst du den Unterschied. Aber erstmal gehen wir unsere 3 Optionen durch.</div>' },
+
+    // Entscheidung Strategiegespraech
+    ent_ja: { title: 'Ja!', box: 'ENT', text: '<div style="background:#f0fdf0;border:2px solid #22c55e;border-radius:12px;padding:20px;text-align:center;font-size:22px;font-weight:700;color:#16a34a;">Deal! Weiter zur Einreichung!</div>' },
+    ent_nein: { title: 'Noch nicht sicher', box: 'ENT', text: '<div class="warn-box">Nutze die Einwaende unten, um den passenden Einwand zu behandeln.</div>' },
+
+    // Strategie Einwaende
+    se_ueberlegen: { title: 'Will ueberlegen', box: 'SE', text: '<div class="speech-box" style="font-size:17px;"><span class="speaker-label">Du sagst:</span>Verstehe. Was genau moechtest du ueberlegen? ... [NAME], wir haben heute alles durchgerechnet. Du hast alle Fakten. Was fehlt dir noch fuer eine Entscheidung? Lass uns das JETZT klaeren.</div><div class="warn-box">"Ueberlegen" = meistens ein versteckter Einwand. Die echte Frage finden!</div>' },
+    se_vergleichen: { title: 'Will noch vergleichen', box: 'SE', text: '<div class="speech-box" style="font-size:17px;"><span class="speaker-label">Du sagst:</span>Womit moechtest du vergleichen? Wir haben gerade 500 Banken verglichen. Das ist der breiteste Vergleich, den du bekommen kannst. Wenn du jetzt noch woanders anfragst, verschlechterst du nur deinen Schufa-Score.</div>' },
+    se_spaeter: { title: 'Spaeter entscheiden', box: 'SE', text: '<div class="speech-box" style="font-size:17px;"><span class="speaker-label">Du sagst:</span>[NAME], ich verstehe. Aber die Konditionen, die ich dir gezeigt habe, gelten nur wenige Tage. Wenn wir warten, aendern sich die Zinsen - und zwar meistens nach oben. Jeder Tag kostet dich Geld.</div>' },
+    se_konkurrenz: { title: 'Konkurrenz ist besser', box: 'SE', text: '<div class="speech-box" style="font-size:17px;"><span class="speaker-label">Du sagst:</span>Okay, das respektiere ich. Zeig mir das Angebot - lass uns es nebeneinander legen. Wenn die Konkurrenz wirklich besser ist, sage ich dir das ehrlich. Aber lass uns Fakten vergleichen, nicht Gefuehle.</div>' },
+
+    // Baulig Einwaende
+    bl_preis: { title: 'Zu teuer', box: 'BL', text: '<div class="speech-box" style="font-size:17px;"><span class="speaker-label">Du sagst:</span>Ich verstehe. Lass mich dich was fragen: Was kostet es dich, wenn du NICHTS aenderst? Was kostet es dich in 1 Jahr, in 5 Jahren? ... Die Investition in dich selbst ist die beste Rendite, die du je bekommst.</div>' },
+    bl_zeit: { title: 'Keine Zeit', box: 'BL', text: '<div class="speech-box" style="font-size:17px;"><span class="speaker-label">Du sagst:</span>Genau DAS ist der Grund, warum du das brauchst. Wenn du jetzt schon keine Zeit hast, wie willst du dann alleine deine Ziele erreichen? Wir helfen dir, effizienter zu werden.</div>' },
+    bl_ueberlegen: { title: 'Muss ueberlegen', box: 'BL', text: '<div class="speech-box" style="font-size:17px;"><span class="speaker-label">Du sagst:</span>Was genau moechtest du ueberlegen? Lass uns das jetzt klaeren. Worueble bist du dir unsicher?</div>' },
+    bl_partner: { title: 'Muss Partner fragen', box: 'BL', text: '<div class="speech-box" style="font-size:17px;"><span class="speaker-label">Du sagst:</span>Verstehe. Was wuerde dein/e Partner/in sagen, wenn du in 6 Monaten [ZIEL ERREICHT]? Koennen wir ihn/sie kurz dazuholen?</div>' },
+    bl_spaeter: { title: 'Spaeter', box: 'BL', text: '<div class="speech-box" style="font-size:17px;"><span class="speaker-label">Du sagst:</span>[NAME], "spaeter" ist der teuerste Zeitpunkt. Jeder Tag, den du wartest, ist ein Tag, den du nicht nutzt. Was hindert dich JETZT?</div>' },
+    bl_funktioniert: { title: 'Funktioniert nicht bei mir', box: 'BL', text: '<div class="speech-box" style="font-size:17px;"><span class="speaker-label">Du sagst:</span>Das hoere ich oft. Und weisst du, wer das auch gesagt hat? [KUNDENNAME], und der hat jetzt [ERGEBNIS]. Was genau glaubst du, funktioniert bei dir nicht? Lass uns das durchgehen.</div>' },
+};
+
+// =============================================
+// RENDER FUNCTIONS
+// =============================================
+
+function goHome() {
+    currentScript = 'kundendaten_start';
+    history = [];
+    currentStepIndex = 0;
+    notes = {};
+    quickNotes = [];
+    steps = [getKundenstammStep()];
+    document.getElementById('headerSubtitle').textContent = 'Verkaufsskript-Tool';
+    showStep();
+}
+
+function renderStartScreen() {
+    MC.innerHTML = `
+        <div class="start-screen">
+            <div class="start-title">Verkaufsskript waehlen</div>
+            <div class="start-subtitle">Waehle das passende Skript fuer dein Gespraech</div>
+            <div class="script-cards">
+                <div class="script-card" onclick="startQualiSelect()">
+                    <div class="card-icon">Q</div>
+                    <div class="card-body">
+                        <h3>ZB Qualifizierung</h3>
+                        <p>Qualifizierungsgespraech (1/3) - Allgemein oder Anschlussfinanzierung</p>
+                    </div>
+                    <div class="card-badge">1/3</div>
+                </div>
+                <div class="script-card" onclick="startScript('analyse')">
+                    <div class="card-icon">A</div>
+                    <div class="card-body">
+                        <h3>ZB Analysegespraech</h3>
+                        <p>Analyse & Kalkulation mit dem Kunden (2/3)</p>
+                    </div>
+                    <div class="card-badge">2/3</div>
+                </div>
+                <div class="script-card" onclick="startScript('strategie')">
+                    <div class="card-icon">S</div>
+                    <div class="card-body">
+                        <h3>ZB Strategiegespraech</h3>
+                        <p>Angebotspraesentation & Closing (3/3)</p>
+                    </div>
+                    <div class="card-badge">3/3</div>
+                </div>
+                <div class="script-card" onclick="startScript('baulig')">
+                    <div class="card-icon">B</div>
+                    <div class="card-body">
+                        <h3>Baulig Closing</h3>
+                        <p>Allgemeines Closing-Skript (7 Phasen)</p>
+                    </div>
+                    <div class="card-badge">Closing</div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+function startQualiSelect() {
+    // Kundendaten sind bereits erfasst, direkt Typ waehlen
+    showQualiTypeSelect();
+}
+
+function showQualiTypeSelect() {
+    MC.innerHTML = `
+        <div class="start-screen">
+            <div class="start-title">Qualifizierung: Typ waehlen</div>
+            <div class="start-subtitle">Welche Art von Qualifizierungsgespraech?</div>
+            <div class="sub-select" style="flex-direction:column;max-width:500px;margin:0 auto;">
+                <div class="sub-select-btn" onclick="startQuali('allgemein')" style="padding:30px;">
+                    <h4>Allgemein</h4>
+                    <p>Kauf, Neubau, Kapitalanlage, etc.</p>
+                </div>
+                <div class="sub-select-btn" onclick="startQuali('anfi')" style="padding:30px;">
+                    <h4>Anschlussfinanzierung</h4>
+                    <p>Speziell fuer Anschlussfinanzierung (AnFi)</p>
+                </div>
+            </div>
+            <div style="text-align:center;margin-top:20px;">
+                <button class="btn btn-back" onclick="goHome()" style="max-width:200px;">Zurueck</button>
+            </div>
+        </div>
+    `;
+}
+
+function startQuali(mode) {
+    qualiMode = mode;
+    currentScript = 'quali';
+    // Kundendaten (notes) behalten
+    const qualiSteps = getQualiSteps(mode);
+    steps = [...qualiSteps];
+    currentStepIndex = 0;
+    history = [];
+    const label = mode === 'anfi' ? 'Qualifizierung (AnFi)' : 'Qualifizierung (Allgemein)';
+    document.getElementById('headerSubtitle').textContent = label + ' - 1/3';
+    showStep();
+}
+
+function startScript(type) {
+    currentScript = type;
+    // Kundendaten (notes) behalten, nicht zuruecksetzen
+    history = [];
+    currentStepIndex = 0;
+    if (type === 'analyse') {
+        steps = [...getAnalyseSteps()];
+        document.getElementById('headerSubtitle').textContent = 'Analysegespraech - 2/3';
+    } else if (type === 'strategie') {
+        steps = [...getStrategieSteps()];
+        document.getElementById('headerSubtitle').textContent = 'Strategiegespraech - 3/3';
+    } else if (type === 'baulig') {
+        steps = [...getBauligSteps()];
+        document.getElementById('headerSubtitle').textContent = 'Baulig Closing';
+    }
+    showStep();
+}
+
+function showStep() {
+    if (!steps.length) return;
+    const step = steps[currentStepIndex];
+    PC.style.display = 'block';
+    FN.classList.remove('hidden');
+
+    // Progress
+    const pct = ((currentStepIndex + 1) / steps.length) * 100;
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('phaseLabel').textContent = step.phase;
+    document.getElementById('stepCounter').textContent = `Schritt ${currentStepIndex + 1} / ${steps.length}`;
+
+    // Back button
+    document.getElementById('btnFooterBack').style.display = currentStepIndex === 0 ? 'none' : '';
+
+    // Next button label
+    const isLast = currentStepIndex === steps.length - 1;
+    if (currentScript === 'kundendaten_start') {
+        document.getElementById('btnFooterNext').textContent = 'Weiter zur Skript-Auswahl';
+    } else {
+        document.getElementById('btnFooterNext').textContent = isLast ? 'Fertig' : 'Weiter';
+    }
+
+    MC.innerHTML = `
+        <div class="step-card">
+            <span class="step-phase">${step.phase}</span>
+            <h2 class="step-title">${step.title}</h2>
+            ${step.content}
+        </div>
+    `;
+
+    // Restore notes (textareas, inputs, selects)
+    MC.querySelectorAll('textarea.notes-area, input.notes-area, select.notes-area').forEach(el => {
+        const match = el.getAttribute('onchange');
+        if (match) {
+            const key = match.match(/saveNote\('([^']+)'/);
+            if (key && notes[key[1]]) el.value = notes[key[1]];
+        }
+    });
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function goNext() {
+    if (currentScript === 'kundendaten_start' && currentStepIndex >= steps.length - 1) {
+        // Nach Kundenstammdaten: Skript-Auswahl anzeigen
+        PC.style.display = 'none';
+        FN.classList.add('hidden');
+        renderStartScreen();
+        return;
+    }
+    if (currentStepIndex < steps.length - 1) {
+        history.push(currentStepIndex);
+        currentStepIndex++;
+        showStep();
+    } else {
+        goHome();
+    }
+}
+
+function goBack() {
+    if (history.length > 0) {
+        currentStepIndex = history.pop();
+        showStep();
+    }
+}
+
+function saveNote(key, value) {
+    notes[key] = value;
+}
+
+function toggleCheck(li) {
+    li.classList.toggle('checked');
+    const icon = li.querySelector('.check-icon');
+    icon.textContent = li.classList.contains('checked') ? '✓' : '';
+}
+
+function toggleExpand(btn) {
+    btn.classList.toggle('open');
+    const content = btn.nextElementSibling;
+    content.classList.toggle('show');
+}
+
+function showObjDetail(key) {
+    const obj = objections[key];
+    if (!obj) return;
+
+    // Determine which container to use based on box property
+    const boxMap = {
+        'VB': 'objDetailVB', 'EX': 'objDetailEX', 'C': 'objDetailC',
+        'BIS': 'objDetailBIS', 'BED': 'objDetailBED', 'KONK': 'objDetailKONK',
+        'ENT': 'objDetailENT', 'SE': 'objDetailSE', 'BL': 'objDetailBL'
+    };
+
+    const containerId = boxMap[obj.box];
+    // Try to find the container
+    let container = document.getElementById(containerId);
+    if (!container) {
+        // Fallback: look for any objDetail container on the page
+        const allContainers = MC.querySelectorAll('[id^="objDetail"]');
+        if (allContainers.length > 0) container = allContainers[allContainers.length - 1];
+        else return;
+    }
+
+    container.classList.remove('hidden');
+    container.innerHTML = `
+        <div style="background:#fff;border:2px solid #d4af37;border-radius:12px;padding:20px;animation:fadeIn 0.3s ease;">
+            <div style="font-size:14px;font-weight:700;color:#d4af37;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;">Einwand: ${obj.title}</div>
+            ${obj.text}
+        </div>
+    `;
+    container.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+// =============================================
+// INIT
+// =============================================
+goHome();
+</script>
+
+<!-- FLOATING NOTES BUTTON -->
+<button class="notes-panel-toggle hidden" id="notesPanelToggle" onclick="toggleNotesPanel()">
+    <span style="font-size:24px;">&#128221;</span>
+    <span class="badge hidden" id="notesBadge">0</span>
+</button>
+
+<!-- NOTES PANEL -->
+<div class="notes-panel" id="notesPanel">
+    <div class="notes-panel-header">
+        <h3>Gesprächsnotizen</h3>
+        <div style="display:flex;gap:8px;align-items:center;">
+            <button class="btn-pdf" onclick="exportNotesPDF()" style="padding:6px 14px;font-size:12px;">PDF speichern</button>
+            <button class="notes-panel-close" onclick="toggleNotesPanel()">&times;</button>
+        </div>
+    </div>
+    <div class="notes-panel-body" id="notesPanelBody">
+        <div class="empty-msg">Noch keine Notizen.</div>
+    </div>
+    <div class="notes-panel-input">
+        <textarea id="quickNoteInput" placeholder="Schnelle Notiz hinzufuegen..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();addQuickNote();}"></textarea>
+        <div class="input-row">
+            <button class="btn-add-note" onclick="addQuickNote()">+ Notiz hinzufuegen</button>
+        </div>
+    </div>
+</div>
+
+<script>
+// =============================================
+// NOTES PANEL LOGIC
+// =============================================
+let quickNotes = [];
+let notesPanelOpen = false;
+
+function toggleNotesPanel() {
+    notesPanelOpen = !notesPanelOpen;
+    document.getElementById('notesPanel').classList.toggle('open', notesPanelOpen);
+    if (notesPanelOpen) refreshNotesPanel();
+}
+
+function addQuickNote() {
+    const input = document.getElementById('quickNoteInput');
+    const text = input.value.trim();
+    if (!text) return;
+    const stepInfo = (steps && steps[currentStepIndex]) ? steps[currentStepIndex].title : 'Allgemein';
+    const time = new Date().toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
+    quickNotes.push({ label: stepInfo, text: text, time: time });
+    input.value = '';
+    refreshNotesPanel();
+    updateNotesBadge();
+}
+
+function refreshNotesPanel() {
+    const body = document.getElementById('notesPanelBody');
+    // Collect all notes: from in-step textareas + quick notes
+    const allNotes = getAllNotes();
+    if (allNotes.length === 0) {
+        body.innerHTML = '<div class="empty-msg">Noch keine Notizen.</div>';
+        return;
+    }
+    body.innerHTML = allNotes.map(n => `
+        <div class="note-entry">
+            <div class="note-label">${n.label}${n.time ? ' · ' + n.time : ''}</div>
+            <div class="note-text">${escHtml(n.text)}</div>
+        </div>
+    `).join('');
+}
+
+function getAllNotes() {
+    const result = [];
+    // Kundenstammdaten
+    const kdLabels = {
+        'kd_name': 'Kundenname', 'kd_tel': 'Telefon', 'kd_email': 'E-Mail',
+        'kd_vorhaben': 'Vorhaben', 'kd_quelle': 'Lead-Quelle', 'kd_zutraeger': 'Zutraeger/Empfehlung',
+        'kd_beruf': 'Beruf', 'kd_einkommen': 'Netto-Einkommen', 'kd_sonstiges': 'Sonstiges zum Kunden'
+    };
+    for (const [key, label] of Object.entries(kdLabels)) {
+        if (notes[key] && notes[key].trim()) {
+            result.push({ label: label, text: notes[key].trim(), time: '' });
+        }
+    }
+    // Step-embedded notes
+    const noteLabels = {
+        'q2_notes': 'IST-Situation', 'q4_notes': 'Banken-Check', 'q7_notes': 'Herausforderungen',
+        'q10_notes': 'Finanz-Check', 'q11_notes': 'Ziele',
+        'a2_notes': 'Analyse-Update', 'a6a_notes': 'Antragsteller', 'a6b_notes': 'Vermögen & EK',
+        'a6c_notes': 'Verbindlichkeiten', 'a6d_notes': 'Schufa', 'a6e_notes': 'Objekt',
+        'a6f_notes': 'Kalkulation', 'a10_muss': 'Ziel: MUSS', 'a10_nice': 'Ziel: NICE TO HAVE',
+        'a10_nogo': 'Ziel: NO-GO', 'a12_notes': 'Fehlende Unterlagen',
+        's2b_notes': 'Rückblick Analyse', 's5_notes': 'Kundenziel', 's6_opt1': 'Option 1 Sicherheit',
+        's6_opt2': 'Option 2 Optimal', 's6_opt3': 'Option 3 Flexibel', 's10_notes': 'Bankeinreichung',
+        'b2_notes': 'Probleme Kunde', 'b3_notes': 'Ziel Kunde'
+    };
+    for (const [key, label] of Object.entries(noteLabels)) {
+        if (notes[key] && notes[key].trim()) {
+            result.push({ label: label, text: notes[key].trim(), time: '' });
+        }
+    }
+    // Quick notes
+    quickNotes.forEach(n => result.push(n));
+    return result;
+}
+
+function updateNotesBadge() {
+    const allNotes = getAllNotes();
+    const badge = document.getElementById('notesBadge');
+    const count = allNotes.length;
+    if (count > 0) {
+        badge.textContent = count;
+        badge.classList.remove('hidden');
+    } else {
+        badge.classList.add('hidden');
+    }
+}
+
+function escHtml(str) {
+    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br>');
+}
+
+// Show the notes toggle button when a script is active
+const _origShowStep = showStep;
+showStep = function() {
+    _origShowStep();
+    document.getElementById('notesPanelToggle').classList.remove('hidden');
+    updateNotesBadge();
+};
+
+const _origGoHome = goHome;
+goHome = function() {
+    _origGoHome();
+    document.getElementById('notesPanelToggle').classList.add('hidden');
+    document.getElementById('notesPanel').classList.remove('open');
+    document.getElementById('btnFooterNext').style.display = '';
+    document.getElementById('btnFooterBack').style.display = '';
+    notesPanelOpen = false;
+    quickNotes = [];
+};
+
+// Override saveNote to also update badge
+const _origSaveNote = saveNote;
+saveNote = function(key, value) {
+    _origSaveNote(key, value);
+    updateNotesBadge();
+};
+
+// Override goNext to show result screen on finish
+const _origGoNext = goNext;
+goNext = function() {
+    // Bei Kundenstammdaten-Start: weiter zur Skript-Auswahl, NICHT beenden
+    if (currentScript === 'kundendaten_start') {
+        _origGoNext();
+        return;
+    }
+    if (currentStepIndex >= steps.length - 1) {
+        showResultScreen();
+    } else {
+        _origGoNext();
+    }
+};
+
+function showResultScreen() {
+    const allNotes = getAllNotes();
+    const scriptName = document.getElementById('headerSubtitle').textContent;
+    const date = new Date().toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    const time = new Date().toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
+
+    let notesHtml = '';
+    if (allNotes.length > 0) {
+        notesHtml = `
+            <div class="result-notes">
+                <h4>Deine Gesprächsnotizen</h4>
+                ${allNotes.map(n => `
+                    <div class="result-note-item">
+                        <div class="rn-label">${escHtml(n.label)}${n.time ? ' · ' + n.time : ''}</div>
+                        <div class="rn-text">${escHtml(n.text)}</div>
+                    </div>
+                `).join('')}
+            </div>
+            <div style="display:flex;gap:12px;justify-content:center;margin:20px 0;">
+                <button class="btn-pdf" onclick="exportNotesPDF()" style="padding:16px 32px;font-size:16px;">
+                    Als PDF speichern
+                </button>
+            </div>
+        `;
+    } else {
+        notesHtml = '<div style="text-align:center;color:#aaa;margin:20px 0;">Keine Notizen vorhanden.</div>';
+    }
+
+    document.getElementById('progressFill').style.width = '100%';
+    document.getElementById('phaseLabel').textContent = 'Abgeschlossen';
+    document.getElementById('stepCounter').textContent = date + ' · ' + time;
+
+    // Kundenstammdaten-Box fuer Result
+    let kdResultHtml = '';
+    const kdShow = [['kd_name','Name'],['kd_tel','Tel'],['kd_email','E-Mail'],['kd_vorhaben','Vorhaben'],['kd_quelle','Quelle'],['kd_beruf','Beruf']];
+    const kdItems = kdShow.filter(([k]) => notes[k] && notes[k].trim());
+    if (kdItems.length) {
+        kdResultHtml = `<div style="background:#fff;border:2px solid #d4af37;border-radius:14px;padding:20px;margin-bottom:20px;">
+            <h4 style="font-size:14px;color:#d4af37;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;">Kundendaten</h4>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px 20px;">
+                ${kdItems.map(([k,l]) => `<div><span style="font-size:12px;color:#888;font-weight:700;">${l}</span><br><span style="font-size:16px;font-weight:600;">${escHtml(notes[k])}</span></div>`).join('')}
+            </div>
+        </div>`;
+    }
+
+    MC.innerHTML = `
+        <div class="result-screen">
+            <div class="result-icon">&#9989;</div>
+            <div class="result-title">${notes['kd_name'] ? escHtml(notes['kd_name']) + ' - ' : ''}Gespräch abgeschlossen</div>
+            <div style="text-align:center;color:#666;margin-bottom:24px;">
+                <strong>${escHtml(scriptName)}</strong><br>${date} um ${time}
+            </div>
+            ${kdResultHtml}
+            ${notesHtml}
+            <div style="display:flex;gap:12px;justify-content:center;margin-top:24px;">
+                <button class="btn btn-back" onclick="goHome()" style="max-width:250px;">Neues Gespräch</button>
+            </div>
+        </div>
+    `;
+
+    // Hide footer nav buttons
+    document.getElementById('btnFooterNext').style.display = 'none';
+    document.getElementById('btnFooterBack').style.display = 'none';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// =============================================
+// PDF EXPORT
+// =============================================
+function exportNotesPDF() {
+    const allNotes = getAllNotes();
+    if (allNotes.length === 0) { alert('Keine Notizen vorhanden.'); return; }
+
+    const scriptName = document.getElementById('headerSubtitle').textContent || 'Gespraech';
+    const date = new Date().toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    const time = new Date().toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
+
+    // Kundenstammdaten separat sammeln
+    const kdFields = [
+        ['kd_name','Name'], ['kd_tel','Telefon'], ['kd_email','E-Mail'],
+        ['kd_vorhaben','Vorhaben'], ['kd_quelle','Lead-Quelle'], ['kd_zutraeger','Zutraeger'],
+        ['kd_beruf','Beruf'], ['kd_einkommen','Netto-Einkommen']
+    ];
+    const kdHtml = kdFields
+        .filter(([k]) => notes[k] && notes[k].trim())
+        .map(([k,l]) => `<tr><td style="font-weight:700;padding:4px 12px 4px 0;color:#888;white-space:nowrap;">${l}</td><td style="padding:4px 0;">${escHtml(notes[k])}</td></tr>`)
+        .join('');
+    const kdSection = kdHtml ? `<table style="width:100%;border-collapse:collapse;margin-bottom:20px;font-size:14px;">${kdHtml}</table>` : '';
+
+    // Gesprachsnotizen (ohne KD-Felder)
+    const gesprNotizen = allNotes.filter(n => !['Kundenname','Telefon','E-Mail','Vorhaben','Lead-Quelle','Zutraeger/Empfehlung','Beruf','Netto-Einkommen','Sonstiges zum Kunden'].includes(n.label));
+
+    // Build print-friendly HTML
+    const printContent = `
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Notizen - ${escHtml(scriptName)}</title>
+<style>
+    @page { margin: 20mm; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; color: #1a1a2e; line-height: 1.6; margin: 0; padding: 20px; }
+    .pdf-header { border-bottom: 3px solid #d4af37; padding-bottom: 16px; margin-bottom: 24px; }
+    .pdf-header h1 { font-size: 22px; color: #1a1a2e; margin: 0; }
+    .pdf-header .pdf-sub { font-size: 14px; color: #888; margin-top: 4px; }
+    .pdf-header .pdf-brand { font-size: 12px; color: #d4af37; font-weight: 700; letter-spacing: 2px; }
+    .section-title { font-size: 14px; font-weight: 700; color: #d4af37; text-transform: uppercase; letter-spacing: 1.5px; margin: 24px 0 10px; border-bottom: 1px solid #eee; padding-bottom: 6px; }
+    .note-item { padding: 10px 0; border-bottom: 1px solid #f0f0f0; }
+    .note-item:last-child { border-bottom: none; }
+    .note-label { font-size: 11px; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: 1px; }
+    .note-text { font-size: 14px; color: #1a1a2e; margin-top: 2px; white-space: pre-wrap; }
+    .pdf-footer { margin-top: 32px; padding-top: 12px; border-top: 1px solid #ddd; font-size: 11px; color: #aaa; text-align: center; }
+</style>
+</head>
+<body>
+<div class="pdf-header">
+    <div class="pdf-brand">ZINSBOUTIQUE</div>
+    <h1>${notes['kd_name'] ? escHtml(notes['kd_name']) + ' - ' : ''}Gespraechsnotizen</h1>
+    <div class="pdf-sub">${escHtml(scriptName)} &middot; ${date} um ${time}</div>
+</div>
+${kdHtml ? '<div class="section-title">Kundenstammdaten</div>' + kdSection : ''}
+${notes['kd_sonstiges'] && notes['kd_sonstiges'].trim() ? '<div class="note-item"><div class="note-label">Sonstiges zum Kunden</div><div class="note-text">' + escHtml(notes['kd_sonstiges']) + '</div></div>' : ''}
+${gesprNotizen.length ? '<div class="section-title">Gespraechsnotizen</div>' : ''}
+${gesprNotizen.map(n => `
+<div class="note-item">
+    <div class="note-label">${escHtml(n.label)}${n.time ? ' &middot; ' + n.time : ''}</div>
+    <div class="note-text">${escHtml(n.text)}</div>
+</div>
+`).join('')}
+<div class="pdf-footer">Erstellt mit Zinsboutique Verkaufsskript-Tool</div>
+</body>
+</html>`;
+
+    // Open print dialog (saves as PDF via browser)
+    const printWindow = window.open('', '_blank', 'width=800,height=600');
+    printWindow.document.write(printContent);
+    printWindow.document.close();
+    setTimeout(() => {
+        printWindow.print();
+    }, 300);
+}
+</script>
+
+<!-- KI CHAT SIDE TAB -->
+<button class="ki-toggle" id="kiToggle" onclick="toggleKiPanel()">KI-ASSISTENT</button>
+
+<div class="ki-panel" id="kiPanel">
+    <div class="ki-header">
+        <h3>KI-Assistent</h3>
+        <div class="ki-header-btns">
+            <button onclick="kiClearChat()">Neues Gespräch</button>
+            <button onclick="kiShowKeyModal()">API-Key</button>
+            <button class="ki-close" onclick="toggleKiPanel()">&times;</button>
+        </div>
+    </div>
+    <div class="ki-quick" id="kiQuick">
+        <button class="ki-quick-btn" onclick="kiInsert('Der Kunde sagt, er will erst noch vergleichen. Wie reagiere ich mit der Exklusivitaetsregel?')">Einwand: vergleichen</button>
+        <button class="ki-quick-btn" onclick="kiInsert('Der Kunde meint, seine Hausbank macht ein besseres Angebot. Wie ueberzeuge ich ihn?')">Einwand: Hausbank</button>
+        <button class="ki-quick-btn" onclick="kiInsert('Wie erklaere ich die Exklusivitaetsregel? Gib mir den genauen Wortlaut.')">Exklusivität</button>
+        <button class="ki-quick-btn" onclick="kiInsert('Wie hole ich das Bedarfs-Commitment? Was sage ich wenn er sagt er kann es alleine?')">Bedarfs-Commitment</button>
+        <button class="ki-quick-btn" onclick="kiInsert('Welche Unterlagen brauche ich? Liste fuer Angestellte und Selbstaendige.')">Unterlagen</button>
+        <button class="ki-quick-btn" onclick="kiInsert('Der Kunde will ueberlegen statt zu entscheiden. Wie reagiere ich?')">Will überlegen</button>
+        <button class="ki-quick-btn" onclick="kiInsert('Erklaere den Goldstandard: Welche 5 Kriterien muss ich pruefen?')">Goldstandard</button>
+        <button class="ki-quick-btn" onclick="kiInsert('Was sind die naechsten Schritte nach dem aktuellen Gespraech?')">Nächste Schritte</button>
+        <button class="ki-quick-btn" onclick="kiInsert('Was sind die wichtigsten Vorteile von Zinsboutique gegenueber Hausbank oder anderen Vermittlern?')">ZB Vorteile</button>
+        <button class="ki-quick-btn" onclick="kiInsert('Wie erklaere ich dem Kunden die Selbstauskunft? Warum ist sie wichtig?')">Selbstauskunft</button>
+    </div>
+    <div class="ki-messages" id="kiMessages">
+        <div class="ki-msg ai">Hallo! Ich bin dein KI-Vertriebsassistent. Stell mir Fragen zu Einwänden, Skript-Formulierungen oder dem Prozess. <br><br><strong>Hinweis:</strong> Der <code>ZB-KI-Assistent.py</code> Server muss im Hintergrund laufen (Doppelklick auf die .bat Datei).</div>
+    </div>
+    <div class="ki-input-area">
+        <textarea id="kiInput" placeholder="Frage eingeben..." rows="1" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();kiSend();}"></textarea>
+        <button class="ki-send" onclick="kiSend()">&#10148;</button>
+    </div>
+</div>
+
+<!-- KI API Key Modal (hidden by default) -->
+<div class="ki-key-modal hidden" id="kiKeyModal">
+    <div class="ki-key-box">
+        <h3>Anthropic API-Key eingeben</h3>
+        <p>Damit der KI-Assistent funktioniert, brauchst du einen API-Key von Anthropic.</p>
+        <input type="password" id="kiKeyInput" placeholder="sk-ant-api03-..." autocomplete="off">
+        <div class="key-info">Dein API-Key bleibt lokal auf deinem Rechner gespeichert (localStorage).</div>
+        <button onclick="kiSaveKey()">Speichern</button>
+    </div>
+</div>
+
+<script>
+// =============================================
+// KI CHAT PANEL LOGIC
+// =============================================
+const KI_SYSTEM_PROMPT = `Du bist der KI-Vertriebsassistent der Zinsboutique GmbH. Du hilfst Finanzierungsberatern WAEHREND Kundengespraechen mit konkreten Formulierungen, Einwandbehandlungen und Prozesswissen.
+
+WICHTIG:
+- Antworte KURZ und KONKRET - der Berater ist im Telefonat!
+- Gib fertige Saetze zum Vorlesen, nicht abstrakte Tipps
+- Formatiere uebersichtlich mit Aufzaehlungen
+- Auf Deutsch antworten
+
+UEBER ZINSBOUTIQUE:
+- Unabhaengiger Baufinanzierungsvermittler, vergleicht ueber 500 Banken
+- Direkte Ansprechpartner bei vielen Banken, sehr gute Beziehungen zu Kreditabteilungen
+- Schnellere Rueckmeldungen und bessere Konditionen als Hausbanken
+- Kostenlos fuer den Kunden (Provision kommt von der Bank)
+- Persoenlicher Ansprechpartner von A bis Z
+- Hausbankservice: Wir koennen die Hausbank des Kunden mit einbinden
+
+DER 3-STUFEN-PROZESS:
+1. QUALIFIZIERUNG (1/3) - Telefonisches Setting-Gespraech (8-10 Min)
+2. ANALYSEGESPRAECH (2/3) - Video-Call via Teams (30-45 Min)
+3. STRATEGIEGESPRAECH (3/3) - Video-Call via Teams
+
+GOLDSTANDARD (alle 5 muessen erfuellt sein):
+1. BEDARF - Hat ein echtes Finanzierungsproblem
+2. BUDGET - Kann sich die Finanzierung leisten
+3. ENTSCHEIDER - Ist alleiniger Entscheider ODER alle kommen zum Termin
+4. ZEIT - Kann zeitnah starten
+5. EIGNUNG - Ist respektvoll und kooperativ
+
+EXKLUSIVITAETSREGEL:
+Pitch: "Damit deine Finanzierung sicher klappt, fuehren wir den Prozess normalerweise exklusiv."
+Gruende: Mehrere Vermittler=Chaos=Ablehnung, Schufa-Risiko, Banken hassen Doppelanfragen
+Kompromiss-Frame: "Versprich mir, dass ich der Letzte bin der dir ein Angebot macht. Deal?"
+
+EINWANDBEHANDLUNG EXKLUSIVITAET:
+1. "Will vergleichen" -> Kompromiss-Frame
+2. "Schon woanders angefragt" -> Ueberblick behalten, Kompromiss-Frame
+3. "Hausbank parallel" -> Hausbankservice anbieten
+4. "Vertraue mehreren" -> Niemand fuehlt sich verantwortlich
+5. "Nicht festlegen" -> Klarer Prozess, Kompromiss-Frame
+6. "Erstmal hoeren" -> Fair, Fall komplett pruefen
+
+BEDARFS-COMMITMENT:
+Frage: "Wuerdest du sagen, dass du aktuell keinen klaren Prozess hast fuer eine verlaessliche Finanzierungszusage?"
+Falls NEIN: "Kann es alleine"->War es beim letzten Mal optimal? "Hausbank"->Keine Renditeberechnung. "Andere Vermittler"->Waerst du sonst bei uns? Weiterhin NEIN->"Wenn du es alleine koenntest, waerst du dann hier?"
+
+UNTERLAGEN: SA, 3 Gehaltsnachweise, Perso, Expose. Selbstaendige: Jahresabschluss, BWA. Investoren: Immobilienuebersicht.
+
+REGELN: Nie konkrete Zinsen nennen. Max 5 Werktage terminieren. Alle Entscheider dabei. SA vor Analysetermin.`;
+
+let kiMessages = [];
+let kiPanelOpen = false;
+
+function toggleKiPanel() {
+    kiPanelOpen = !kiPanelOpen;
+    document.getElementById('kiPanel').classList.toggle('open', kiPanelOpen);
+    document.getElementById('kiToggle').classList.toggle('panel-open', kiPanelOpen);
+    if (kiPanelOpen) {
+        const key = localStorage.getItem('zb_api_key');
+        if (!key) kiShowKeyModal();
+        document.getElementById('kiInput').focus();
+    }
+}
+
+function kiInsert(text) {
+    document.getElementById('kiInput').value = text;
+    document.getElementById('kiInput').focus();
+}
+
+function kiShowKeyModal() {
+    document.getElementById('kiKeyModal').classList.remove('hidden');
+    const existing = localStorage.getItem('zb_api_key') || '';
+    document.getElementById('kiKeyInput').value = existing;
+}
+
+function kiSaveKey() {
+    const key = document.getElementById('kiKeyInput').value.trim();
+    if (key) {
+        localStorage.setItem('zb_api_key', key);
+        document.getElementById('kiKeyModal').classList.add('hidden');
+    }
+}
+
+function kiClearChat() {
+    kiMessages = [];
+    const mc = document.getElementById('kiMessages');
+    mc.innerHTML = '<div class="ki-msg ai">Chat zurückgesetzt. Stell mir eine neue Frage!</div>';
+}
+
+async function kiSend() {
+    const input = document.getElementById('kiInput');
+    const text = input.value.trim();
+    if (!text) return;
+
+    const apiKey = localStorage.getItem('zb_api_key');
+    if (!apiKey) { kiShowKeyModal(); return; }
+
+    // Add user message
+    kiMessages.push({ role: 'user', content: text });
+    input.value = '';
+
+    const mc = document.getElementById('kiMessages');
+    mc.innerHTML += `<div class="ki-msg user">${kiEsc(text)}</div>`;
+    mc.innerHTML += `<div class="ki-msg ai typing" id="kiTyping">Denkt nach...</div>`;
+    mc.scrollTop = mc.scrollHeight;
+
+    try {
+        const resp = await fetch('http://localhost:8800/api/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ api_key: apiKey, messages: kiMessages })
+        });
+
+        const typing = document.getElementById('kiTyping');
+        if (typing) typing.remove();
+
+        if (!resp.ok) {
+            const err = await resp.text();
+            mc.innerHTML += `<div class="ki-msg error">Fehler: ${resp.status}. Prüfe deinen API-Key.</div>`;
+            kiMessages.pop();
+            mc.scrollTop = mc.scrollHeight;
+            return;
+        }
+
+        const data = await resp.json();
+        const aiText = data.content?.[0]?.text || 'Keine Antwort erhalten.';
+        kiMessages.push({ role: 'assistant', content: aiText });
+        mc.innerHTML += `<div class="ki-msg ai">${kiRenderMd(aiText)}</div>`;
+    } catch (e) {
+        const typing = document.getElementById('kiTyping');
+        if (typing) typing.remove();
+        mc.innerHTML += `<div class="ki-msg error">Server nicht erreichbar. Starte <strong>ZB-KI-Assistent.bat</strong> im Hintergrund.</div>`;
+        kiMessages.pop();
+    }
+    mc.scrollTop = mc.scrollHeight;
+}
+
+function kiEsc(s) {
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+}
+
+function kiRenderMd(text) {
+    let html = kiEsc(text);
+    // Bold
+    html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+    // Italic
+    html = html.replace(/(?<!\*)\*([^*]+?)\*(?!\*)/g, '<em>$1</em>');
+    // Bullet lists
+    html = html.replace(/^- (.+)$/gm, '<li>$1</li>');
+    html = html.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
+    // Numbered lists
+    html = html.replace(/^\d+\.\s+(.+)$/gm, '<li>$1</li>');
+    return html;
+}
+</script>
+
+</body>
+</html>
